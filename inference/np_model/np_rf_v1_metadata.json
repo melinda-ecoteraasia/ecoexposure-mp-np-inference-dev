@@ -1,0 +1,44 @@
+{
+  "model_name": "np_v1",
+  "model_file": "np_rf_v1.joblib",
+  "training_rows": 112,
+  "class_counts": {
+    "LE1M": 61,
+    "10M": 51,
+    "100M": 0,
+    "1B": 0
+  },
+  "cv_splits": 5,
+  "cv_accuracy": 0.7589285714285714,
+  "cv_balanced_accuracy": 0.7626165220186436,
+  "features": [
+    "Clarity_Raw",
+    "ROI_Mean_Raw",
+    "ROI_SD_Raw",
+    "Center_Clarity_Raw",
+    "Mid_Clarity_Raw",
+    "Outer_Clarity_Raw",
+    "Center_Mid_Contrast_Raw",
+    "Center_Outer_Contrast_Raw",
+    "RCDI_Raw",
+    "COR_Raw",
+    "Center_Clarity_Z",
+    "Center_Mid_Contrast_Z",
+    "Center_Outer_Contrast_Z",
+    "Center_GEC",
+    "LuED",
+    "Radial_Gradient",
+    "RSI_Correlation",
+    "RSI_RadialCV"
+  ],
+  "stock_to_class": {
+    "A": "1B",
+    "B": "100M",
+    "C": "10M",
+    "D": "LE1M",
+    "E": "LE1M",
+    "F": "LE1M",
+    "G": "LE1M",
+    "H": "LE1M"
+  }
+}

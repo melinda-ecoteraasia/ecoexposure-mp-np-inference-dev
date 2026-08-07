@@ -1,0 +1,35 @@
+EcoExposure NP Model v1
+=======================
+
+Input CSV: C:\Users\micro\OneDrive\Desktop\EcoExposure_Render_Inference_v1_CLEAN\new_MP_NP_files\EcoExposure_NP_Model_v1_scripts\EcoExposure_30min_NP_EXCLUDED.csv
+Filename column: Filename
+Training rows: 112
+CV folds: 5
+CV accuracy: 0.759
+CV balanced accuracy: 0.763
+
+Class counts:
+  ≤1M NP/L: 61
+  10M NP/L: 51
+  100M NP/L: 0
+  1B NP/L: 0
+
+Classification report:
+              precision    recall  f1-score   support
+
+    ≤1M NP/L      0.815     0.721     0.765        61
+    10M NP/L      0.707     0.804     0.752        51
+   100M NP/L      0.000     0.000     0.000         0
+     1B NP/L      0.000     0.000     0.000         0
+
+    accuracy                          0.759       112
+   macro avg      0.380     0.381     0.379       112
+weighted avg      0.766     0.759     0.759       112
+
+
+Confusion matrix:
+           pred_LE1M  pred_10M  pred_100M  pred_1B
+true_LE1M         44        17          0        0
+true_10M          10        41          0        0
+true_100M          0         0          0        0
+true_1B            0         0          0        0
