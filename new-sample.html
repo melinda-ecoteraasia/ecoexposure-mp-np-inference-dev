@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoExposure™ | New Sample</title>
+  <style>
+    :root {--bg:#f6f8f7;--card:#fff;--text:#1f2933;--muted:#6b7280;--border:#d7ded9;--accent:#0f766e;--accent-dark:#115e59;}
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+    header{padding:22px 16px;background:linear-gradient(135deg,#0f766e,#164e63);color:#fff} header h1{margin:0 0 6px;font-size:1.45rem} header p{margin:0;font-size:.95rem;opacity:.9}
+    main{max-width:760px;margin:0 auto;padding:16px} section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+    h2{font-size:1.05rem;margin:0 0 14px} label{display:block;font-size:.88rem;font-weight:600;margin:12px 0 5px}
+    input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;font-size:1rem;background:#fff} textarea{min-height:78px;resize:vertical}
+    .info-box{margin-top:10px;padding:10px;background:#eef7f5;border-radius:10px;font-size:.9rem;color:var(--muted)}
+    .image-slot{border:1px dashed var(--border);border-radius:12px;padding:12px;margin-bottom:12px;background:#fbfcfb}.image-slot strong{display:block;margin-bottom:8px}
+    .preview{display:none;margin-top:10px;max-height:180px;max-width:100%;border-radius:10px;border:1px solid var(--border)}
+    button{border:none;border-radius:10px;padding:11px 14px;font-size:.98rem;font-weight:700;cursor:pointer;background:var(--accent);color:#fff;width:100%;margin-top:10px} button:hover{background:var(--accent-dark)}
+    button.secondary{background:#e5e7eb;color:var(--text)} .top-nav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}.top-nav a{color:var(--accent);font-weight:700;text-decoration:none}
+    .status{margin-top:10px;color:var(--muted);font-size:.9rem}
+    dialog{border:none;border-radius:16px;padding:0;max-width:520px;width:calc(100% - 24px);box-shadow:0 18px 60px rgba(0,0,0,.28)}
+    dialog::backdrop{background:rgba(15,23,42,.66)}
+    .dialog-inner{padding:16px}.dialog-actions{display:flex;gap:10px}.dialog-actions button{width:auto;flex:1}
+    #qrReader{width:100%;min-height:260px;margin-top:12px}.kit-ok{color:#047857;font-weight:700}.kit-error{color:#b91c1c;font-weight:700}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>New EcoExposure Sample</h1>
+    <p>Enter sample details, add photos, and save your sample.</p>
+  </header>
+  <main>
+    <div class="top-nav"><a href="./index.html">← Home</a><a href="./my-samples.html">My Samples →</a></div>
+    <section>
+      <h2>Sample Info</h2>
+      <label for="userName">User Name</label><input id="userName" placeholder="Your name" />
+      <label for="location">Location</label><input id="location" placeholder="Site, city, or notes" />
+      <label for="waterType">Water Type</label>
+      <select id="waterType"><option>Tap</option><option>River</option><option>Lake</option><option>Bay</option><option>Ocean</option><option>Brackish</option><option selected>Other</option></select>
+      <label>Kit Verification</label><button type="button" onclick="scanQRCode()">📷 Scan Kit QR Code</button><div id="qrStatus" class="info-box">Kit not yet verified.</div>
+      <button type="button" onclick="captureGPS()">Capture GPS Location</button><div id="gpsStatus" class="info-box">No GPS location captured yet.</div>
+      <label for="sampleID">Sample ID</label><input id="sampleID" placeholder="Example: Kitchen Tap 01" />
+
+<label>Capture Stage</label>
+
+<label>
+  <input type="radio" name="captureStage" value="pre_reagent">
+  Pre-Reagent
+</label>
+
+<label>
+  <input type="radio" name="captureStage" value="post_reaction">
+  Post-Reaction
+</label>
+
+<label>
+  <input type="radio" name="captureStage" value="other">
+  Other
+</label>
+
+      <label for="notes">Notes</label><textarea id="notes" placeholder="Sample conditions or visual observations..."></textarea>
+    </section>
+    <section>
+      <h2>Images</h2>
+      <div class="image-slot"><strong>Top View - White Background </strong><input id="topImage" type="file" accept="image/*" onchange="previewImage('topImage','topPreview')" /><img id="topPreview" class="preview" alt="Top view preview" /></div>
+
+<div class="image-slot">
+  <strong>Top View – Grid Background</strong>
+
+  <input
+    id="topGridImage"
+    type="file"
+    accept="image/*"
+    onchange="previewImage('topGridImage','topGridPreview')"
+  />
+
+  <img
+    id="topGridPreview"
+    class="preview"
+    alt="Top grid preview"
+  />
+</div>
+      <div class="image-slot"><strong>Side View</strong><input id="sideImage" type="file" accept="image/*" onchange="previewImage('sideImage','sidePreview')" /><img id="sidePreview" class="preview" alt="Side view preview" /></div>
+      <div class="image-slot"><strong>Close-Up</strong><input id="closeUpImage" type="file" accept="image/*" onchange="previewImage('closeUpImage','closeUpPreview')" /><img id="closeUpPreview" class="preview" alt="Close-up preview" /></div>
+      <div class="image-slot"><strong>Other</strong><input id="otherImage" type="file" accept="image/*" onchange="previewImage('otherImage','otherPreview')" /><img id="otherPreview" class="preview" alt="Other preview" /></div>
+    </section>
+    <section>
+      <h2>Save</h2>
+      <button type="button" onclick="saveEntry()">Save Sample</button>
+      <button class="secondary" type="button" onclick="clearDraft()">Clear Current Draft</button>
+      <div id="saveStatus" class="status">No sample saved yet.</div>
+    </section>
+  </main>
+  <dialog id="qrDialog">
+    <div class="dialog-inner">
+      <h2>Scan EcoExposure Kit</h2>
+      <div id="qrReader"></div>
+      <label for="manualKitCode">Or enter the kit code</label>
+      <input id="manualKitCode" placeholder="EA-KIT-000001" autocomplete="off" />
+      <div id="qrDialogStatus" class="status"></div>
+      <div class="dialog-actions">
+        <button type="button" onclick="verifyManualKitCode()">Verify Code</button>
+        <button type="button" class="secondary" onclick="closeQRScanner()">Cancel</button>
+      </div>
+    </div>
+  </dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://hakezadejldlvfkaaxbs.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_objAYX-6RRXLwOWra1a66g_dDthWovO";
+    const STORAGE_BUCKET = "ecotera_asia_ecoexposure_images";
+    const TABLE_NAME = "samples";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let latitude = null, longitude = null, currentUser = null, currentKit = null, qrScanner = null;
+const imageSlots = {
+    topImage:"top",
+    topGridImage:"top_grid",
+    sideImage:"side",
+    closeUpImage:"closeup",
+    otherImage:"other"
+};
+
+    async function requireLogin(){
+      const {data,error}=await supabaseClient.auth.getUser();
+      if(error||!data.user){window.location.replace("login.html");return;}
+      currentUser=data.user;
+    }
+
+    async function scanQRCode(){
+      const dialog=document.getElementById("qrDialog");
+      document.getElementById("qrDialogStatus").textContent="";
+      document.getElementById("manualKitCode").value="";
+      dialog.showModal();
+      try{
+        qrScanner=new Html5Qrcode("qrReader");
+        await qrScanner.start(
+          {facingMode:"environment"},
+          {fps:10,qrbox:{width:220,height:220}},
+          async decodedText=>{
+            await verifyKitCode(decodedText);
+            if(currentKit) closeQRScanner();
+          },
+          ()=>{}
+        );
+      }catch(e){
+        document.getElementById("qrDialogStatus").textContent="Camera unavailable. Enter the kit code manually below.";
+      }
+    }
+
+    async function closeQRScanner(){
+      if(qrScanner){
+        try{if(qrScanner.isScanning)await qrScanner.stop();}catch(e){}
+        try{await qrScanner.clear();}catch(e){}
+        qrScanner=null;
+      }
+      document.getElementById("qrDialog").close();
+    }
+
+    async function verifyManualKitCode(){
+      await verifyKitCode(document.getElementById("manualKitCode").value);
+      if(currentKit) await closeQRScanner();
+    }
+
+    async function verifyKitCode(rawCode){
+      const code=String(rawCode||"").trim();
+      const dialogStatus=document.getElementById("qrDialogStatus");
+      const pageStatus=document.getElementById("qrStatus");
+      currentKit=null;
+      if(!code){dialogStatus.textContent="Enter or scan a kit code.";return;}
+      dialogStatus.textContent="Checking kit...";
+      const {data,error}=await supabaseClient.rpc("check_kit",{p_qr_token:code});
+      if(error){dialogStatus.textContent=`Kit check failed: ${error.message}`;return;}
+      const kit=data&&data[0]?data[0]:null;
+      if(!kit){dialogStatus.textContent="Kit code not recognized.";pageStatus.textContent="Kit not verified.";return;}
+      if(kit.kit_status!=="active"||kit.remaining_samples<=0){
+        dialogStatus.textContent="This kit has reached its sample limit or is inactive.";
+        pageStatus.innerHTML=`<span class="kit-error">${kit.kit_code}: no submissions remaining.</span>`;
+        return;
+      }
+      currentKit=kit;
+      pageStatus.innerHTML=`<span class="kit-ok">Verified: ${kit.kit_code} - ${kit.remaining_samples} submission${kit.remaining_samples===1?"":"s"} remaining.</span>`;
+      dialogStatus.textContent="Kit verified.";
+    }
+
+    function captureGPS(){
+      const box=document.getElementById("gpsStatus");
+      if(!navigator.geolocation){box.textContent="GPS is not supported in this browser.";return;}
+      box.textContent="Requesting GPS location...";
+      navigator.geolocation.getCurrentPosition(p=>{latitude=p.coords.latitude;longitude=p.coords.longitude;box.textContent=`Location captured: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;},e=>{box.textContent=`GPS error: ${e.message}`;},{enableHighAccuracy:true,timeout:10000,maximumAge:0});
+    }
+
+    function previewImage(inputID,previewID){
+      const input=document.getElementById(inputID),preview=document.getElementById(previewID);
+      if(!input.files||!input.files[0]){preview.style.display="none";preview.removeAttribute("src");return;}
+      const reader=new FileReader();reader.onload=e=>{preview.src=e.target.result;preview.style.display="block";};reader.readAsDataURL(input.files[0]);
+    }
+
+
+    async function compressImage(file){
+
+      const bitmap = await createImageBitmap(file);
+
+      const MAX_DIMENSION = 1400;
+
+      const scale = Math.min(
+        1,
+        MAX_DIMENSION / Math.max(bitmap.width, bitmap.height)
+      );
+
+      const width = Math.round(bitmap.width * scale);
+      const height = Math.round(bitmap.height * scale);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(bitmap,0,0,width,height);
+
+      const blob = await new Promise(resolve=>{
+        canvas.toBlob(resolve,"image/webp",0.72);
+      });
+
+      return new File(
+        [blob],
+        file.name.replace(/\.[^.]+$/,"") + ".webp",
+        {type:"image/webp"}
+      );
+    }
+
+
+    function sanitizeForFilename(input){return String(input||"").trim().replace(/\s+/g,"-").replace(/[\\/:,]/g,"-").replace(/[^a-zA-Z0-9._-]/g,"");}
+    function timestampString(){const d=new Date(),p=v=>String(v).padStart(2,"0");return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}_${p(d.getHours())}-${p(d.getMinutes())}-${p(d.getSeconds())}`;}
+    function filenameFor(slot,file){const u=sanitizeForFilename(document.getElementById("userName").value||"UnknownUser"),w=sanitizeForFilename(document.getElementById("waterType").value||"Other"),s=sanitizeForFilename(document.getElementById("sampleID").value||"UnknownSample"),ext=(file.name.split(".").pop()||"jpg").toLowerCase();return `EcoExposure_${slot}_${u}_${w}_${s}_${timestampString()}.${ext}`;}
+
+    async function uploadOneImage(inputID,slot){
+      const input=document.getElementById(inputID);
+      const originalFile=input.files&&input.files[0]?input.files[0]:null;
+      if(!originalFile)return null;
+
+      const file=await compressImage(originalFile);
+
+      const path=`${currentUser.id}/${filenameFor(slot,file)}`;
+
+      const {error}=await supabaseClient.storage.from(STORAGE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false});
+      if(error)throw new Error(`${slot} image upload failed: ${error.message}`);return path;
+    }
+
+    async function saveEntry(){
+      const status=document.getElementById("saveStatus");status.textContent="Checking login...";
+      if(!currentUser)await requireLogin();if(!currentUser)return;
+      const userName=document.getElementById("userName").value.trim(),sampleID=document.getElementById("sampleID").value.trim();
+      const hasImage=Object.keys(imageSlots).some(id=>{const i=document.getElementById(id);return i.files&&i.files.length>0;});
+	const captureStage =
+  document.querySelector('input[name="captureStage"]:checked')?.value || "";
+
+      if(!currentKit){status.textContent="Scan and verify a kit QR code before saving.";return;}
+      if(!userName||!sampleID||!captureStage ||!hasImage){status.textContent="Required: User Name, Sample ID, Capture Stage, and at least one image.";return;}
+      try{
+        status.textContent="Uploading photos...";
+       const top_photo = await uploadOneImage("topImage","top"),
+      top_grid_photo = await uploadOneImage("topGridImage","top_grid"),
+      side_photo = await uploadOneImage("sideImage","side"),
+      closeup_photo = await uploadOneImage("closeUpImage","closeup"),
+      other_photo = await uploadOneImage("otherImage","other");;
+        status.textContent="Saving sample...";
+        const rpcArgs={
+          p_kit_id:currentKit.kit_id,
+          p_user_name:userName,
+          p_sample_label:sampleID,
+          p_location:document.getElementById("location").value.trim(),
+          p_water_type:document.getElementById("waterType").value,
+          p_latitude:latitude,
+          p_longitude:longitude,
+          p_notes:document.getElementById("notes").value.trim(),
+          p_top_photo:top_photo,
+          p_side_photo:side_photo,
+          p_closeup_photo:closeup_photo,
+          p_other_photo:other_photo,
+	  p_capture_stage: captureStage,
+	  p_top_grid_photo: top_grid_photo,
+        };
+        const {data,error}=await supabaseClient.rpc("save_sample_with_kit",rpcArgs);if(error)throw new Error(`Database save failed: ${error.message}`);
+        const result=data&&data[0]?data[0]:null;
+        status.textContent=`✅ Sample saved: ${sampleID}. ${result?result.remaining_samples:""} kit submission${result&&result.remaining_samples===1?"":"s"} remaining.`;
+        currentKit=null;clearDraft(false);
+      }catch(e){status.textContent=e.message;}
+    }
+
+    function clearDraft(updateStatus=true){
+      ["userName","location","sampleID","notes"].forEach(id=>document.getElementById(id).value="");document.getElementById("waterType").value="Other";
+      Object.entries({topImage:"topPreview",sideImage:"sidePreview",closeUpImage:"closeUpPreview",otherImage:"otherPreview"}).forEach(([i,p])=>{document.getElementById(i).value="";const pr=document.getElementById(p);pr.style.display="none";pr.removeAttribute("src");});
+      latitude=null;longitude=null;currentKit=null;document.getElementById("gpsStatus").textContent="No GPS location captured yet.";document.getElementById("qrStatus").textContent="Kit not yet verified.";if(updateStatus)document.getElementById("saveStatus").textContent="Draft cleared.";
+    }
+
+    requireLogin();
+  </script>
+</body>
+</html>

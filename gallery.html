@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoExposure Gallery</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #f6f8f7;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --border: #d7ded9;
+      --accent: #0f766e;
+      --accent-dark: #115e59;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 22px 16px;
+      background: linear-gradient(135deg, #0f766e, #164e63);
+      color: white;
+    }
+
+    header h1 { margin: 0 0 6px; font-size: 1.45rem; }
+    header p { margin: 0; font-size: 0.95rem; opacity: 0.9; }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    section, .sample-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    h2 { margin: 0 0 14px; font-size: 1.05rem; }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin: 12px 0 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    button, a.button {
+      display: inline-block;
+      text-align: center;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button:hover, a.button:hover { background: var(--accent-dark); }
+    button.secondary, a.secondary { background: #e5e7eb; color: #1f2933; }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .top-nav a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .sample-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .sample-title h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .photo-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      background: #fbfcfb;
+    }
+
+    .photo-card img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .photo-card small {
+      display: block;
+      color: var(--muted);
+      word-break: break-all;
+      margin-bottom: 8px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      overflow-x: auto;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 640px) {
+      .actions { grid-template-columns: 1fr; }
+      .sample-title { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>EcoExposure Gallery</h1>
+    <p>View saved samples and renamed photo uploads</p>
+  </header>
+
+  <main>
+    <div class="top-nav">
+      <a href="./index.html">← Capture App</a>
+      <a href="./gallery.html">Refresh Gallery</a>
+    </div>
+
+    <section>
+      <h2>Login</h2>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="name@example.com" autocomplete="email" />
+
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+
+      <div class="actions">
+        <button type="button" onclick="login()">Log In + Load Gallery</button>
+        <button type="button" class="secondary" onclick="forgotPassword()">Forgot Password</button>
+        <button type="button" class="secondary" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="status" id="authStatus">Ready. Log in to view your gallery.</div>
+    </section>
+
+    <section>
+      <h2>Gallery Actions</h2>
+
+      <div class="actions">
+        <button type="button" onclick="loadSamples()">Load My Samples</button>
+        <button type="button" class="secondary" onclick="downloadCSV()">Download My CSV</button>
+      </div>
+
+      <div class="status" id="galleryStatus">No samples loaded yet.</div>
+    </section>
+
+    <div id="samplesContainer"></div>
+
+    <section>
+      <h2>CSV Preview</h2>
+      <pre id="csvPreview">No CSV loaded yet.</pre>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://qvmgrchkmmezpwhlfxjv.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_3M-2qrVCnjO9XfjsBCUf6g_l1wSuwVu";
+    const TABLE_NAME = "samples";
+    const BUCKET_NAME = "ecoexposure_images";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+
+    let currentUser = null;
+    let loadedSamples = [];
+
+    window.onerror = function(message, source, lineno, colno, error) {
+      document.getElementById("authStatus").textContent =
+        "JavaScript error: " + message + " at line " + lineno;
+    };
+
+    async function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const authStatus = document.getElementById("authStatus");
+
+      if (!email || !password) {
+        authStatus.textContent = "Enter email and password first.";
+        return;
+      }
+
+      authStatus.textContent = "Logging in...";
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+      if (error) {
+        authStatus.textContent = "Login failed: " + error.message;
+        return;
+      }
+
+      currentUser = data.user;
+      authStatus.textContent = "Logged in as " + currentUser.email;
+
+      await loadSamples();
+    }
+
+
+    async function forgotPassword() {
+      const email = document.getElementById("email").value.trim();
+      const authStatus = document.getElementById("authStatus");
+
+      if (!email) {
+        authStatus.textContent = "Enter your email address first, then tap Forgot Password.";
+        return;
+      }
+
+      authStatus.textContent = "Sending password reset email...";
+
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: "https://melinda-ecoteraasia.github.io/ecoexposure-webapp_v1/reset-password.html"
+      });
+
+      if (error) {
+        authStatus.textContent = "Password reset failed: " + error.message;
+        return;
+      }
+
+      authStatus.textContent = "Password reset email sent. Check your inbox/spam folder.";
+    }
+
+    async function logout() {
+      await supabaseClient.auth.signOut();
+
+      currentUser = null;
+      loadedSamples = [];
+
+      document.getElementById("authStatus").textContent = "Logged out.";
+      document.getElementById("galleryStatus").textContent = "No samples loaded yet.";
+      document.getElementById("samplesContainer").innerHTML = "";
+      document.getElementById("csvPreview").textContent = "No CSV loaded yet.";
+    }
+
+    async function ensureUser() {
+      if (currentUser) return currentUser;
+
+      const { data, error } = await supabaseClient.auth.getUser();
+
+      if (!error && data && data.user) {
+        currentUser = data.user;
+        document.getElementById("authStatus").textContent =
+          "Logged in as " + currentUser.email;
+        return currentUser;
+      }
+
+      throw new Error("Please log in on this Gallery page first.");
+    }
+
+    async function loadSamples() {
+      const status = document.getElementById("galleryStatus");
+
+      try {
+        await ensureUser();
+
+        status.textContent = "Loading samples...";
+
+        const { data, error } = await supabaseClient
+          .from(TABLE_NAME)
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        loadedSamples = data || [];
+
+        document.getElementById("csvPreview").textContent =
+          loadedSamples.length ? makeCSV(loadedSamples) : "No saved entries found.";
+
+        await renderSamples(loadedSamples);
+
+        status.textContent = "Loaded " + loadedSamples.length + " sample(s).";
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    }
+
+    async function signedUrl(path) {
+      if (!path) return null;
+
+      const { data, error } = await supabaseClient.storage
+        .from(BUCKET_NAME)
+        .createSignedUrl(path, 60 * 60);
+
+      if (error) return null;
+
+      return data.signedUrl;
+    }
+
+    async function renderSamples(samples) {
+      const container = document.getElementById("samplesContainer");
+      container.innerHTML = "";
+
+      if (!samples.length) {
+        container.innerHTML =
+          '<section><h2>No samples yet</h2><p class="status">Save a sample from the capture app first.</p></section>';
+        return;
+      }
+
+      for (const sample of samples) {
+        const card = document.createElement("div");
+        card.className = "sample-card";
+
+        card.innerHTML = `
+          <div class="sample-title">
+            <h3>${escapeHTML(sample.sample_id || "Untitled sample")}</h3>
+            <div class="status">${escapeHTML(displayDate(sample.created_at))}</div>
+          </div>
+
+          <div class="meta">
+            <strong>Collector:</strong> ${escapeHTML(sample.collector || "")}<br>
+            <strong>Location:</strong> ${escapeHTML(sample.location || "")}<br>
+            <strong>Water Type:</strong> ${escapeHTML(sample.water_type || "")}<br>
+            <strong>Concentration:</strong> ${escapeHTML(sample.concentration || "")}<br>
+            <strong>Minutes Since Powder:</strong> ${escapeHTML(sample.minutes_since_powder || "")}<br>
+            <strong>GPS:</strong> ${escapeHTML(sample.latitude || "")}, ${escapeHTML(sample.longitude || "")}<br>
+            <strong>Notes:</strong> ${escapeHTML(sample.notes || "")}
+          </div>
+        `;
+
+        const grid = document.createElement("div");
+        grid.className = "photo-grid";
+
+        const photos = [
+          ["Top View", sample.top_photo],
+          ["Side View", sample.side_photo],
+          ["Close-Up", sample.closeup_photo],
+          ["Other", sample.other_photo]
+        ];
+
+        for (const [label, path] of photos) {
+          if (!path) continue;
+
+          const url = await signedUrl(path);
+          const photoCard = document.createElement("div");
+          photoCard.className = "photo-card";
+
+          if (url) {
+            photoCard.innerHTML = `
+              <strong>${escapeHTML(label)}</strong>
+              <img src="${url}" alt="${escapeHTML(label)}" loading="lazy">
+              <small>${escapeHTML(path.split("/").pop())}</small>
+              <a class="button secondary" href="${url}" target="_blank" rel="noopener">Open / Download</a>
+            `;
+          } else {
+            photoCard.innerHTML = `
+              <strong>${escapeHTML(label)}</strong>
+              <small>${escapeHTML(path)}</small>
+              <div class="status">Could not create image preview URL.</div>
+            `;
+          }
+
+          grid.appendChild(photoCard);
+        }
+
+        card.appendChild(grid);
+        container.appendChild(card);
+      }
+    }
+
+    function displayDate(value) {
+      if (!value) return "";
+
+      try {
+        return new Date(value).toLocaleString();
+      } catch {
+        return value;
+      }
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? "");
+
+      if (text.includes(",") || text.includes('"') || text.includes("\n")) {
+        return '"' + text.replace(/"/g, '""') + '"';
+      }
+
+      return text;
+    }
+
+    function makeCSV(samples) {
+      const header = [
+        "id",
+        "created_at",
+        "user_id",
+        "collector",
+        "location",
+        "water_type",
+        "latitude",
+        "longitude",
+        "sample_id",
+        "concentration",
+        "minutes_since_powder",
+        "top_photo",
+        "side_photo",
+        "closeup_photo",
+        "other_photo",
+        "notes"
+      ];
+
+      const rows = samples.map(row =>
+        header.map(key => csvEscape(row[key])).join(",")
+      );
+
+      return [header.join(","), ...rows].join("\n");
+    }
+
+    function downloadCSV() {
+      if (!loadedSamples.length) {
+        document.getElementById("galleryStatus").textContent =
+          "Load samples before downloading CSV.";
+        return;
+      }
+
+      const blob = new Blob([makeCSV(loadedSamples)], {
+        type: "text/csv;charset=utf-8"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+
+      a.href = url;
+      a.download = "ecoexposure_my_samples.csv";
+      a.click();
+
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
+</body>
+</html>

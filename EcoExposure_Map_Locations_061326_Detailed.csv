@@ -1,0 +1,25 @@
+Location,Latitude,Longitude,Suggested Info Card,Matrix Type,Matrix Challenge
+Cincinnati Suburbs,39.23045850246467,-84.37562681521484,"Municipal tap water baseline. Repeated testing used for protocol development, smartphone imaging optimization, and consumer-use workflows.",Tap Water,Baseline
+Miami Whitewater Forest Lake,39.258356807077874,-84.74377235944996,"DOM-rich freshwater lake. Used to evaluate dissolved organic matter (DOM) interference, matrix conditioning, and salt-dilution approaches for environmental waters.",Lake Water,DOM
+Swaim Park,39.22906051229227,-84.36157291712314,DOM-rich pond water with visible coloration and organic matter. Used for minimum-salt conditioning studies and cardboard photobox optimization.,Pond Water,DOM
+St. Louis Suburb,38.660989306789716,-90.56994459753882,Municipal tap water. Cross-city comparison of drinking water matrices and reproducibility across geographic locations.,Tap Water,Baseline
+"Washington University, St. Louis",38.650000972201866,-90.31120916133177,Municipal water evaluation. Used to assess performance across independent water systems and sampling environments.,Tap Water,Baseline
+Houston City,29.737138090265812,-95.46726827522825,Urban municipal tap water. Gulf Coast comparison site supporting environmental matrix diversity studies.,Tap Water,Baseline
+"Pine Gully, Texas",29.592491816046078,-94.99363207333141,Brackish coastal water. Evaluated transition-zone environments where freshwater and marine influences coexist.,Brackish Water,Salinity
+"Clear Lake Shores, TX",29.550204895548234,-95.03572019153411,Brackish estuarine environment. Used to assess performance in elevated salinity and mixed coastal waters.,Brackish Water,Salinity
+"Clear Lake Shores, Marina Bay, TX",29.543259082184626,-95.04431966834333,Brackish marina water. Real-world recreational and coastal monitoring environment.,Brackish Water,Salinity
+"Clear Lake Shores, Fishing Pier, TX",29.55076284687727,-95.03539333754095,Brackish shoreline sampling location. Environmental field evaluation in mixed salinity conditions.,Brackish Water,Salinity
+"Nassau Bay, TX",29.54322404603364,-95.08332104625904,Brackish coastal water near Clear Lake system. Supports estuarine and marine-adjacent monitoring applications.,Brackish Water,Salinity
+Singapore Chiangi Airport Hotel,1.360309441270225,103.98983712748414,Singapore municipal tap water. International comparison site representing tropical urban drinking water.,Tap Water,Baseline
+Singapore City Hotel,1.3025941024115306,103.85787969532792,Singapore municipal tap water. Evaluated as part of Southeast Asia environmental monitoring development.,Tap Water,Baseline
+Manila Philippines Quezon City,14.644119976310503,121.05277701014676,Municipal tap water. Urban Southeast Asian drinking water evaluation.,Tap Water,Baseline
+Manila Philippines BGC,14.551008218906436,121.0530784533804,Municipal tap water. Comparison of water quality characteristics across Manila metropolitan locations.,Tap Water,Baseline
+Paris city,48.839423124785476,2.25547087160904,Hard/mineralized municipal water. Surface-film observations contributed to development of dilution and matrix-conditioning protocols.,Hard Water,Hard Water
+"Paris Seine River, Site 1 (A)",48.859196,2.331467,Fresh river-water sample collected near the Louvre–Musée d'Orsay corridor. Part of multi-site Seine River environmental monitoring pilot.,River Water,River System
+"Paris Seine River, Site 2 (B1)",48.860097,2.333079,Fresh river-water sample collected within the central Seine pilot region. Used to compare river and municipal water matrices.,River Water,River System
+"Paris Seine River, Site 3 (C1)",48.858851,2.334530,Environmental freshwater sample from the Seine River. Supports spatial comparison within the Paris pilot.,River Water,River System
+"Paris Seine River, Site 4 (C2)",48.858771,2.334248,Environmental freshwater sample from the Seine River. Evaluated alongside municipal and airport water samples.,River Water,River System
+Paris CDG Airport tap water,49.00942045486726,2.550868663796757,"Airport municipal water sample. Notably different optical behavior from central Paris hard-water locations, suggesting infrastructure-related differences.",Tap Water,Baseline
+SFO Airport,37.61297094948803,-122.39385638836839,"Municipal airport water sample. Cross-region comparison with Paris, Singapore, and Midwest water systems.",Tap Water,Baseline
+San Francisco Bay,37.80577190949771,-122.46549930131542,Brackish estuarine water. Represents a complex transition zone between freshwater and marine environments.,Brackish Water,Salinity
+"Aurora, CO",39.6800313432519,-104.79158458826407,Denver-area municipal water. Rocky Mountain regional comparison site for tap-water evaluation.,Tap Water,Baseline

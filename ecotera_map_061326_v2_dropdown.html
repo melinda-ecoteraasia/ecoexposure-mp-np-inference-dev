@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoExposure™ Field Sampling Map</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #f8f9fa; }
+    #map { height: 100vh; width: 100%; }
+    
+    .info-card {
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 320px;
+    }
+    .info-card h3 {
+      margin: 0 0 6px 0;
+      color: #1a5f3c;
+      font-size: 16px;
+    }
+    .info-card .meta {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .info-card .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-right: 6px;
+      margin-bottom: 8px;
+    }
+    .tag-DOM { background: #e8f5e9; color: #1a5f3c; }
+    .tag-HardWater { background: #fff3e0; color: #e65100; }
+    .tag-Salinity { background: #e3f2fd; color: #1565c0; }
+    .tag-Baseline { background: #f5f5f5; color: #424242; }
+
+    .map-panel {
+      position: absolute;
+      z-index: 1000;
+      background: rgba(255,255,255,0.94);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #222;
+    }
+    .map-title-panel {
+      top: 14px;
+      right: 14px;
+      max-width: 310px;
+    }
+    .map-title-panel h2 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+      color: #1a5f3c;
+    }
+    .map-title-panel p {
+      margin: 0;
+      line-height: 1.4;
+      color: #444;
+    }
+    .map-title-panel .statline {
+      margin-top: 8px;
+      font-weight: 600;
+      color: #1a5f3c;
+    }
+    .legend-panel {
+      bottom: 24px;
+      left: 14px;
+      min-width: 210px;
+    }
+    .legend-panel h4 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #1a5f3c;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 5px 0;
+      white-space: nowrap;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid #fff;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.18);
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+    .popup-label {
+      font-weight: 600;
+      color: #333;
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+
+<div class="map-panel map-title-panel">
+  <h2>EcoExposure™ Sampling Locations</h2>
+  <p>Field and pilot testing across municipal, river, lake/pond, hard-water, and brackish matrices.</p>
+  <div class="statline">
+    <a href="#" onclick="toggleLocations(); return false;" style="color:#1a5f3c;text-decoration:none;">
+      24 documented locations ▾
+    </a> • 4 countries • 5 matrix types
+  </div>
+  <div id="locationList" style="display:none;margin-top:10px;max-height:220px;overflow-y:auto;font-size:12px;line-height:1.4;">
+    <b>Tap Water</b><br>
+    Cincinnati Suburbs<br>
+    St. Louis Suburb<br>
+    Washington University<br>
+    Houston City<br>
+    Singapore Changi<br>
+    Singapore City Hotel<br>
+    Manila (Quezon City)<br>
+    Manila (BGC)<br>
+    Paris CDG Airport<br>
+    SFO Airport<br>
+    Denver Metro (Aurora)<br><br>
+
+    <b>DOM Waters</b><br>
+    Miami Whitewater Forest Lake<br>
+    Swaim Park Pond<br><br>
+
+    <b>River Water</b><br>
+    Paris Seine Site 1<br>
+    Paris Seine Site 2<br>
+    Paris Seine Site 3<br>
+    Paris Seine Site 4<br><br>
+
+    <b>Hard Water</b><br>
+    Paris City<br><br>
+
+    <b>Brackish Water</b><br>
+    Pine Gully<br>
+    Clear Lake Shores<br>
+    Marina Bay<br>
+    Fishing Pier<br>
+    Nassau Bay<br>
+    San Francisco Bay
+  </div>
+</div>
+
+<div class="map-panel legend-panel">
+  <h4>Matrix Type</h4>
+  <div class="legend-item"><span class="legend-dot" style="background:#2E7D32;"></span>Tap Water</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#F9A825;"></span>River Water</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#43A047;"></span>Lake / Pond Water (DOM)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#EF6C00;"></span>Hard Water</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#1565C0;"></span>Brackish Water</div>
+</div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// Initialize map
+const map = L.map('map').setView([20, 0], 2); // World view
+
+// Add OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// All your sampling locations from the spreadsheet
+const samplingPoints = [
+  {
+    lat: 39.23045850246467,
+    lng: -84.37562681521484,
+    title: "Cincinnati Suburbs",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Municipal tap water baseline. Repeated testing used for protocol development, smartphone imaging optimization, and consumer-use workflows."
+  },
+  {
+    lat: 39.258356807077874,
+    lng: -84.74377235944996,
+    title: "Miami Whitewater Forest Lake",
+    date: "May 2026",
+    type: "Lake Water",
+    challenge: "DOM",
+    description: "DOM-rich freshwater lake. Used to evaluate dissolved organic matter (DOM) interference, matrix conditioning, and salt-dilution approaches for environmental waters."
+  },
+  {
+    lat: 39.22906051229227,
+    lng: -84.36157291712314,
+    title: "Swaim Park",
+    date: "May 2026",
+    type: "Pond Water",
+    challenge: "DOM",
+    description: "DOM-rich pond water with visible coloration and organic matter. Used for minimum-salt conditioning studies and cardboard photobox optimization."
+  },
+  {
+    lat: 38.660989306789716,
+    lng: -90.56994459753882,
+    title: "St. Louis Suburb",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Municipal tap water. Cross-city comparison of drinking water matrices and reproducibility across geographic locations."
+  },
+  {
+    lat: 38.650000972201866,
+    lng: -90.31120916133177,
+    title: "Washington University, St. Louis",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Municipal water evaluation. Used to assess performance across independent water systems and sampling environments."
+  },
+  {
+    lat: 29.737138090265812,
+    lng: -95.46726827522825,
+    title: "Houston City",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Urban municipal tap water. Gulf Coast comparison site supporting environmental matrix diversity studies."
+  },
+  {
+    lat: 29.592491816046078,
+    lng: -94.99363207333141,
+    title: "Pine Gully, Texas",
+    date: "Ongoing",
+    type: "Brackish Water",
+    challenge: "Salinity",
+    description: "Brackish coastal water. Evaluated transition-zone environments where freshwater and marine influences coexist."
+  },
+  {
+    lat: 29.550204895548234,
+    lng: -95.03572019153411,
+    title: "Clear Lake Shores, TX",
+    date: "Ongoing",
+    type: "Brackish Water",
+    challenge: "Salinity",
+    description: "Brackish estuarine environment. Used to assess performance in elevated salinity and mixed coastal waters."
+  },
+  {
+    lat: 29.543259082184626,
+    lng: -95.04431966834333,
+    title: "Clear Lake Shores, Marina Bay, TX",
+    date: "Ongoing",
+    type: "Brackish Water",
+    challenge: "Salinity",
+    description: "Brackish marina water. Real-world recreational and coastal monitoring environment."
+  },
+  {
+    lat: 29.55076284687727,
+    lng: -95.03539333754095,
+    title: "Clear Lake Shores, Fishing Pier, TX",
+    date: "Ongoing",
+    type: "Brackish Water",
+    challenge: "Salinity",
+    description: "Brackish shoreline sampling location. Environmental field evaluation in mixed salinity conditions."
+  },
+  {
+    lat: 29.54322404603364,
+    lng: -95.08332104625904,
+    title: "Nassau Bay, TX",
+    date: "Ongoing",
+    type: "Brackish Water",
+    challenge: "Salinity",
+    description: "Brackish coastal water near Clear Lake system. Supports estuarine and marine-adjacent monitoring applications."
+  },
+  {
+    lat: 1.360309441270225,
+    lng: 103.98983712748414,
+    title: "Singapore Changi Airport Hotel",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Singapore municipal tap water. International comparison site representing tropical urban drinking water."
+  },
+  {
+    lat: 1.3025941024115306,
+    lng: 103.85787969532792,
+    title: "Singapore City Hotel",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Singapore municipal tap water. Evaluated as part of Southeast Asia environmental monitoring development."
+  },
+  {
+    lat: 14.644119976310503,
+    lng: 121.05277701014676,
+    title: "Manila Philippines Quezon City",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Municipal tap water. Urban Southeast Asian drinking water evaluation."
+  },
+  {
+    lat: 14.551008218906436,
+    lng: 121.0530784533804,
+    title: "Manila Philippines BGC",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Municipal tap water. Comparison of water quality characteristics across Manila metropolitan locations."
+  },
+  {
+    lat: 48.839423124785476,
+    lng: 2.25547087160904,
+    title: "Paris City",
+    date: "May 2026",
+    type: "Hard Water",
+    challenge: "Hard Water",
+    description: "Hard/mineralized municipal water. Surface-film observations contributed to development of dilution and matrix-conditioning protocols."
+  },
+  {
+    lat: 48.859196,
+    lng: 2.331467,
+    title: "Paris Seine River, Site 1 (A)",
+    date: "May 2026",
+    type: "River Water",
+    challenge: "River System",
+    description: "Fresh river-water sample collected near the Louvre–Musée d'Orsay corridor. Part of multi-site Seine River environmental monitoring pilot."
+  },
+  {
+    lat: 48.860097,
+    lng: 2.333079,
+    title: "Paris Seine River, Site 2 (B1)",
+    date: "May 2026",
+    type: "River Water",
+    challenge: "River System",
+    description: "Fresh river-water sample collected within the central Seine pilot region. Used to compare river and municipal water matrices."
+  },
+  {
+    lat: 48.858851,
+    lng: 2.334530,
+    title: "Paris Seine River, Site 3 (C1)",
+    date: "May 2026",
+    type: "River Water",
+    challenge: "River System",
+    description: "Environmental freshwater sample from the Seine River. Supports spatial comparison within the Paris pilot."
+  },
+  {
+    lat: 48.858771,
+    lng: 2.334248,
+    title: "Paris Seine River, Site 4 (C2)",
+    date: "May 2026",
+    type: "River Water",
+    challenge: "River System",
+    description: "Environmental freshwater sample from the Seine River. Evaluated alongside municipal and airport water samples."
+  },
+  {
+    lat: 49.00942045486726,
+    lng: 2.550868663796757,
+    title: "Paris CDG Airport Tap Water",
+    date: "May 2026",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Airport municipal water sample. Notably different optical behavior from central Paris hard-water locations, suggesting infrastructure-related differences."
+  },
+  {
+    lat: 37.61297094948803,
+    lng: -122.39385638836839,
+    title: "SFO Airport",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Municipal airport water sample. Cross-region comparison with Paris, Singapore, and Midwest water systems."
+  },
+  {
+    lat: 37.80577190949771,
+    lng: -122.46549930131542,
+    title: "San Francisco Bay",
+    date: "Ongoing",
+    type: "Brackish Water",
+    challenge: "Salinity",
+    description: "Brackish estuarine water. Represents a complex transition zone between freshwater and marine environments."
+  },
+  {
+    lat: 39.6800313432519,
+    lng: -104.79158458826407,
+    title: "Aurora, CO",
+    date: "Ongoing",
+    type: "Tap Water",
+    challenge: "Baseline",
+    description: "Denver-area municipal water. Rocky Mountain regional comparison site for tap-water evaluation."
+  }
+];
+
+// Function to get popup tag color
+function getTagClass(challenge) {
+  if (challenge === "DOM") return "tag-DOM";
+  if (challenge === "Hard Water") return "tag-HardWater";
+  if (challenge === "Salinity") return "tag-Salinity";
+  return "tag-Baseline";
+}
+
+// Function to color markers by matrix type
+function getMarkerColor(type) {
+  if (type === "River Water") return "#F9A825";
+  if (type === "Lake Water" || type === "Pond Water") return "#43A047";
+  if (type === "Hard Water") return "#EF6C00";
+  if (type === "Brackish Water") return "#1565C0";
+  return "#2E7D32"; // Tap Water / default
+}
+
+// Add markers
+samplingPoints.forEach(point => {
+  const marker = L.circleMarker([point.lat, point.lng], {
+    radius: 7,
+    fillColor: getMarkerColor(point.type),
+    color: "#fff",
+    weight: 1.5,
+    opacity: 1,
+    fillOpacity: 0.9
+  }).addTo(map);
+
+  const popupContent = `
+    <div class="info-card">
+      <h3>${point.title}</h3>
+      <div class="meta">${point.date}</div>
+      <div><span class="popup-label">Matrix:</span> ${point.type}</div>
+      <span class="tag ${getTagClass(point.challenge)}">${point.challenge}</span>
+      <p>${point.description}</p>
+    </div>
+  `;
+
+  marker.bindPopup(popupContent, {
+    maxWidth: 340,
+    className: 'custom-popup'
+  });
+
+  // Open popup on hover (nice for desktop)
+  marker.on('mouseover', function () {
+    this.openPopup();
+  });
+  marker.on('mouseout', function () {
+    this.closePopup();
+  });
+});
+
+// Fit map to show all points
+const bounds = L.latLngBounds(samplingPoints.map(p => [p.lat, p.lng]));
+map.fitBounds(bounds, { padding: [40, 40] });
+</script>
+
+
+<script>
+function toggleLocations() {
+  const el = document.getElementById('locationList');
+  el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+}
+</script>
+
+</body>
+</html>

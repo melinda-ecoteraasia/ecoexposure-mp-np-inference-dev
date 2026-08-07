@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoExposure™ | Account</title>
+  <style>
+    :root {
+      --bg:#f6f8f7;
+      --card:#ffffff;
+      --text:#1f2933;
+      --muted:#6b7280;
+      --border:#d7ded9;
+      --accent:#0f766e;
+      --accent-dark:#115e59;
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    header {
+      padding:22px 16px;
+      background:linear-gradient(135deg,#0f766e,#164e63);
+      color:#fff;
+    }
+
+    header h1 { margin:0 0 6px; font-size:1.45rem; }
+    header p { margin:0; font-size:.95rem; opacity:.9; }
+
+    main {
+      max-width:640px;
+      margin:0 auto;
+      padding:16px;
+    }
+
+    .top-nav {
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .top-nav a {
+      color:var(--accent);
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    section {
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:18px;
+      margin-bottom:16px;
+      box-shadow:0 1px 4px rgba(0,0,0,.04);
+    }
+
+    h2 { margin:0 0 14px; font-size:1.08rem; }
+
+    .profile-row {
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .avatar {
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:#dff4ef;
+      color:var(--accent);
+      font-size:1.7rem;
+      flex:0 0 auto;
+    }
+
+    .email {
+      font-weight:700;
+      word-break:break-word;
+    }
+
+    .muted {
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+
+    .menu {
+      display:grid;
+      gap:10px;
+    }
+
+    a.button, button {
+      display:block;
+      width:100%;
+      border:none;
+      border-radius:10px;
+      padding:12px 14px;
+      text-align:center;
+      text-decoration:none;
+      font-size:1rem;
+      font-weight:700;
+      cursor:pointer;
+      background:var(--accent);
+      color:#fff;
+    }
+
+    a.button:hover, button:hover { background:var(--accent-dark); }
+
+    .secondary {
+      background:#e5e7eb !important;
+      color:var(--text) !important;
+    }
+
+    .coming-soon {
+      padding:14px;
+      border:1px dashed var(--border);
+      border-radius:12px;
+      background:#fbfcfb;
+    }
+
+    .status {
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Account</h1>
+    <p>Manage your EcoExposure account and sample activity.</p>
+  </header>
+
+  <main>
+    <div class="top-nav">
+      <a href="./index.html">← Home</a>
+      <a href="./new-sample.html">New Sample</a>
+      <a href="./my-samples.html">My Samples</a>
+    </div>
+
+    <section>
+      <h2>Account</h2>
+      <div class="profile-row">
+        <div class="avatar" aria-hidden="true">👤</div>
+        <div>
+          <div class="email" id="accountEmail">Checking account...</div>
+          <div class="muted">EcoExposure pilot participant</div>
+        </div>
+      </div>
+      <div id="accountStatus" class="status"></div>
+    </section>
+
+    <section>
+      <h2>Quick Links</h2>
+      <div class="menu">
+        <a class="button" href="./new-sample.html">＋ Collect a New Sample</a>
+        <a class="button secondary" href="./my-samples.html">View My Samples</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Community Profile</h2>
+      <div class="coming-soon">
+        <strong>Coming Soon</strong>
+        <p class="muted">
+          Build a contributor profile, join citizen-science projects,
+          participate in city and waterway challenges, and view your impact.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <button type="button" onclick="signOut()">Log Out</button>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://hakezadejldlvfkaaxbs.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_objAYX-6RRXLwOWra1a66g_dDthWovO";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function initializeAccount() {
+      const { data, error } = await supabaseClient.auth.getUser();
+
+      if (error || !data.user) {
+        window.location.replace("login.html");
+        return;
+      }
+
+      document.getElementById("accountEmail").textContent = data.user.email;
+      document.getElementById("accountStatus").textContent = "Logged in.";
+    }
+
+    async function signOut() {
+      const status = document.getElementById("accountStatus");
+      status.textContent = "Logging out...";
+
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        status.textContent = "Logout failed: " + error.message;
+        return;
+      }
+
+      window.location.replace("login.html");
+    }
+
+    initializeAccount();
+  </script>
+</body>
+</html>

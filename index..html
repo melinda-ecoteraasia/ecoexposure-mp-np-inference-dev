@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EcoExposure™ | Home Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter & Geist -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e0e3e5",
+                    "on-primary": "#ffffff",
+                    "primary": "#001629",
+                    "on-tertiary-fixed": "#00201b",
+                    "secondary-fixed-dim": "#50dad1",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-container": "#0d2e28",
+                    "tertiary": "#001814",
+                    "secondary-container": "#6ef4ea",
+                    "on-background": "#191c1e",
+                    "on-tertiary-fixed-variant": "#2d4c46",
+                    "inverse-primary": "#a8caef",
+                    "on-primary-fixed-variant": "#274969",
+                    "tertiary-fixed": "#c7eae1",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-fixed": "#00201e",
+                    "primary-container": "#002b49",
+                    "surface-dim": "#d8dadc",
+                    "secondary": "#006a64",
+                    "on-secondary-fixed-variant": "#00504b",
+                    "primary-fixed-dim": "#a8caef",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#e6e8ea",
+                    "tertiary-fixed-dim": "#accec5",
+                    "background": "#f7f9fb",
+                    "on-tertiary-container": "#76978f",
+                    "on-primary-container": "#7293b6",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#006f69",
+                    "outline-variant": "#c3c7ce",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary-fixed": "#72f7ed",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed": "#001d34",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#191c1e",
+                    "on-surface-variant": "#42474d",
+                    "primary-fixed": "#cfe5ff",
+                    "outline": "#73777e",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-tint": "#406182",
+                    "on-secondary": "#ffffff",
+                    "surface": "#f7f9fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "gutter": "16px",
+                    "container-max": "1280px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "sm": "8px",
+                    "base": "4px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "label-caps": ["Geist"],
+                    "headline-xl": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "data-mono": ["Geist"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #E2E8F0;
+        }
+        .snap-x-mandatory {
+            scroll-snap-type: x mandatory;
+        }
+        .snap-center {
+            scroll-snap-align: center;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary-container">
+
+<!-- Welcome Popup -->
+<div id="welcomePopup" class="fixed inset-0 z-[9999] flex items-center justify-center bg-primary/70 backdrop-blur-sm px-6">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center relative">
+    
+    <button onclick="closeWelcomePopup()" class="absolute top-3 right-3 text-on-surface-variant text-xl">
+      ×
+    </button>
+
+    <h2 class="text-2xl font-bold text-primary mb-4">Welcome to EcoExposure™</h2>
+
+    <div class="text-left space-y-3 text-on-surface mb-6">
+      <p><strong>1.</strong> Collect Water Sample</p>
+      <p><strong>2.</strong> Add Biodegradable Reagent</p>
+      <p><strong>3.</strong> Capture Image or Choose from Camera Roll</p>
+      <p><strong>4.</strong> AI + Computer Vision Analysis</p>
+    </div>
+
+    <p class="text-sm text-on-surface-variant mb-6">
+      Explore representative water samples from around the world.
+    </p>
+
+    <button onclick="closeWelcomePopup()" class="bg-secondary-container text-on-secondary-container w-full py-3 rounded-full font-bold">
+      Start Demo
+    </button>
+  </div>
+</div>
+
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-surface-container-low/80 docked full-width top-0 sticky backdrop-blur-xl border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none flex justify-between items-center px-gutter w-full z-50 h-16">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="water_drop">water_drop</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">ecotera asia</h1>
+</div>
+<div class="flex gap-md">
+<button class="hover:bg-surface-container-high/50 transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
+</button>
+<div class="relative">
+<button id="accountMenuButton" type="button" onclick="toggleAccountMenu()" aria-label="Open account menu" aria-expanded="false"
+class="hover:bg-surface-container-high/50 transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</button>
+<div id="accountMenu" class="hidden absolute right-0 mt-2 w-56 bg-white border border-outline-variant rounded-xl shadow-xl overflow-hidden z-[100]">
+<div id="accountEmail" class="px-4 py-3 text-sm text-on-surface-variant border-b border-outline-variant">Checking account...</div>
+<a href="account.html" class="block px-4 py-3 hover:bg-surface-container-low font-semibold">My Account</a>
+<a href="my-samples.html" class="block px-4 py-3 hover:bg-surface-container-low font-semibold">My Samples</a>
+<button type="button" onclick="signOutFromHome()" class="w-full text-left px-4 py-3 hover:bg-surface-container-low font-semibold text-error">Log Out</button>
+</div>
+</div>
+</div>
+</header>
+<main class="pb-32 pt-lg">
+<!-- Hero Section -->
+
+<!-- Primary Actions -->
+<section class="px-gutter mb-xl">
+  <div class="grid grid-cols-2 gap-4 max-w-xl">
+
+    <a href="new-sample.html"
+       class="bg-secondary text-white rounded-xl py-4 text-center font-bold shadow hover:opacity-90 transition">
+      ➕ New Sample
+    </a>
+
+    <a href="my-samples.html"
+      class="bg-white border border-outline rounded-xl py-4 text-center font-bold shadow hover:bg-gray-50 transition">
+      🖼 My Samples
+    </a>
+
+  </div>
+</section>
+
+<section class="px-gutter mb-xl">
+<h2 class="font-headline-xl text-headline-xl text-primary max-w-2xl mb-sm">EcoExposure™</h2>
+<p class="font-body-md text-on-surface-variant max-w-lg">Explore Water Systems Across Asia and Around the World</p>
+</section>
+<!-- Horizontal Immersive Scroller -->
+<div class="flex overflow-x-auto snap-x-mandatory px-gutter gap-lg pb-xl">
+<!-- Singapore Tap Water -->
+<div onclick="window.location.href='capture_image_singapore.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
+<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
+<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Singapore skyline and harbor water." src="location_images/singapore_singapore_location.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 p-lg w-full">
+<div class="flex items-center gap-sm mb-xs">
+<span class="bg-secondary-container/20 text-secondary-fixed-dim px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Coastal Harbor</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Singapore Tap Water</h3>
+<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Coastal urban water profile.</p>
+<a href="capture_image_singapore.html" class="bg-secondary-container text-on-secondary-container px-lg py-md rounded-full font-label-caps flex items-center gap-sm hover:brightness-110 active:scale-95 transition-all inline-flex">
+Explore Sample
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Manila Tap Water -->
+<div onclick="window.location.href='capture_image_manila.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
+<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
+<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Manila municipal water system." src="location_images/manila_philippines_location.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 p-lg w-full">
+<div class="flex items-center gap-sm mb-xs">
+<span class="bg-surface-container-highest/20 text-on-surface-variant px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Urban Municipal</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Manila Tap Water</h3>
+<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Municipal water profile.</p>
+<a href="capture_image_manila.html" class="bg-white/10 hover:bg-white/20 border border-white/30 text-on-primary px-lg py-md rounded-full font-label-caps flex items-center gap-sm active:scale-95 transition-all inline-flex">
+Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Paris Tap Water -->
+<div onclick="window.location.href='capture_image_paris.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
+<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
+<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Paris tap water profile." src="location_images/paris_france_location.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 p-lg w-full">
+<div class="flex items-center gap-sm mb-xs">
+<span class="bg-secondary-container/20 text-secondary-fixed-dim px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Hard Water</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Paris Tap Water</h3>
+<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Mineral-rich water profile.</p>
+<a href="capture_image_paris.html" class="bg-secondary-container text-on-secondary-container px-lg py-md rounded-full font-label-caps flex items-center gap-sm hover:brightness-110 active:scale-95 transition-all inline-flex">
+Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div></div>
+</div>
+<!-- San Francisco Bay -->
+<div onclick="window.location.href='capture_image_san_francisco.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
+<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
+<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="San Francisco Bay and Golden Gate Bridge." src="location_images/san_francisco_usa_location.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 p-lg w-full">
+<div class="flex items-center gap-sm mb-xs">
+<span class="bg-surface-container-highest/20 text-on-surface-variant px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Field Sample</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">San Francisco Bay</h3>
+<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Coastal field sample.</p>
+<a href="capture_image_san_francisco.html" class="bg-white/10 hover:bg-white/20 border border-white/30 text-on-primary px-lg py-md rounded-full font-label-caps flex items-center gap-sm active:scale-95 transition-all inline-flex">
+Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Ohio Freshwater Lake -->
+<div onclick="window.location.href='capture_image_ohio_lake.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
+<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
+<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Ohio freshwater lake." src="location_images/ohio-lake_usa_location.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 p-lg w-full">
+<div class="flex items-center gap-sm mb-xs">
+<span class="bg-secondary-container/20 text-secondary-fixed-dim px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Freshwater Lake</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Ohio Lake</h3>
+<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Freshwater lake with dissolved organic matter (DOMs).</p>
+<a href="capture_image_ohio_lake.html" class="bg-secondary-container text-on-secondary-container px-lg py-md rounded-full font-label-caps flex items-center gap-sm hover:brightness-110 active:scale-95 transition-all inline-flex">
+Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Filtered Water -->
+<div onclick="window.location.href='capture_image_filtered_water.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
+<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
+<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Filtered water reference sample." src="location_images/filtered_water_location.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 p-lg w-full">
+<div class="flex items-center gap-sm mb-xs">
+<span class="bg-surface-container-highest/20 text-on-surface-variant px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Reference Sample</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Filtered Water</h3>
+<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Reference control sample.</p>
+<a href="capture_image_filtered_water.html" class="bg-white/10 hover:bg-white/20 border border-white/30 text-on-primary px-lg py-md rounded-full font-label-caps flex items-center gap-sm active:scale-95 transition-all inline-flex">
+Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-white/95 dark:bg-surface-container-highest/95 fixed bottom-0 w-full z-50 backdrop-blur-lg border-t border-outline-variant/30 shadow-[0_-4px_16px_rgba(0,22,41,0.04)] flex justify-around items-center px-1 pb-safe-area-inset-bottom h-20">
+
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-3 py-1 active:scale-90 transition-all duration-200" href="index.html">
+<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="new-sample.html">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps">New Sample</span>
+</a>
+
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="my-samples.html">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="font-label-caps text-label-caps">My Samples</span>
+</a>
+
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="#" onclick="event.preventDefault(); alert('Learn section coming soon!');">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-caps text-label-caps">Learn</span>
+</a>
+
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="account.html">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-caps text-label-caps">Account</span>
+</a>
+
+</nav>
+<script>
+        // Micro-interactions for horizontal scroll
+        const scroller = document.querySelector('.overflow-x-auto');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scroller.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - scroller.offsetLeft;
+            scrollLeft = scroller.scrollLeft;
+        });
+        scroller.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        scroller.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        scroller.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scroller.offsetLeft;
+            const walk = (x - startX) * 2;
+            scroller.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+
+<script>
+  function closeWelcomePopup() {
+    document.getElementById("welcomePopup").style.display = "none";
+  }
+</script>
+
+
+<script>
+  const SUPABASE_URL = "https://hakezadejldlvfkaaxbs.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_objAYX-6RRXLwOWra1a66g_dDthWovO";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  function toggleAccountMenu() {
+    const menu = document.getElementById("accountMenu");
+    const button = document.getElementById("accountMenuButton");
+    const willOpen = menu.classList.contains("hidden");
+    menu.classList.toggle("hidden");
+    button.setAttribute("aria-expanded", String(willOpen));
+  }
+
+  document.addEventListener("click", (event) => {
+    const menu = document.getElementById("accountMenu");
+    const button = document.getElementById("accountMenuButton");
+    if (!menu || !button) return;
+    if (!menu.contains(event.target) && !button.contains(event.target)) {
+      menu.classList.add("hidden");
+      button.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  async function initializeHomeAccount() {
+    const emailBox = document.getElementById("accountEmail");
+    const { data, error } = await supabaseClient.auth.getUser();
+
+    if (error || !data.user) {
+      emailBox.textContent = "Not logged in";
+      return;
+    }
+
+    emailBox.textContent = data.user.email;
+  }
+
+  async function signOutFromHome() {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+      alert("Logout failed: " + error.message);
+      return;
+    }
+
+    window.location.replace("login.html");
+  }
+
+  initializeHomeAccount();
+</script>
+
+</body>
+</html>
