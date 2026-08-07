@@ -1,405 +1,1085 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoExposure Capture Webapp</title>
+  <style>
+    :root {
+      --bg: #f6f8f7;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --border: #d7ded9;
+      --accent: #0f766e;
+      --accent-dark: #115e59;
+      --danger: #b91c1c;
+    }
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>EcoExposure™ | Home Dashboard</title>
-<!-- Material Symbols -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<!-- Google Fonts: Inter & Geist -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "surface-container-highest": "#e0e3e5",
-                    "on-primary": "#ffffff",
-                    "primary": "#001629",
-                    "on-tertiary-fixed": "#00201b",
-                    "secondary-fixed-dim": "#50dad1",
-                    "inverse-surface": "#2d3133",
-                    "tertiary-container": "#0d2e28",
-                    "tertiary": "#001814",
-                    "secondary-container": "#6ef4ea",
-                    "on-background": "#191c1e",
-                    "on-tertiary-fixed-variant": "#2d4c46",
-                    "inverse-primary": "#a8caef",
-                    "on-primary-fixed-variant": "#274969",
-                    "tertiary-fixed": "#c7eae1",
-                    "surface-container-lowest": "#ffffff",
-                    "surface-bright": "#f7f9fb",
-                    "on-secondary-fixed": "#00201e",
-                    "primary-container": "#002b49",
-                    "surface-dim": "#d8dadc",
-                    "secondary": "#006a64",
-                    "on-secondary-fixed-variant": "#00504b",
-                    "primary-fixed-dim": "#a8caef",
-                    "error": "#ba1a1a",
-                    "surface-container-high": "#e6e8ea",
-                    "tertiary-fixed-dim": "#accec5",
-                    "background": "#f7f9fb",
-                    "on-tertiary-container": "#76978f",
-                    "on-primary-container": "#7293b6",
-                    "error-container": "#ffdad6",
-                    "on-secondary-container": "#006f69",
-                    "outline-variant": "#c3c7ce",
-                    "inverse-on-surface": "#eff1f3",
-                    "secondary-fixed": "#72f7ed",
-                    "surface-container": "#eceef0",
-                    "on-primary-fixed": "#001d34",
-                    "on-error": "#ffffff",
-                    "surface-variant": "#e0e3e5",
-                    "on-error-container": "#93000a",
-                    "on-surface": "#191c1e",
-                    "on-surface-variant": "#42474d",
-                    "primary-fixed": "#cfe5ff",
-                    "outline": "#73777e",
-                    "on-tertiary": "#ffffff",
-                    "surface-container-low": "#f2f4f6",
-                    "surface-tint": "#406182",
-                    "on-secondary": "#ffffff",
-                    "surface": "#f7f9fb"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "spacing": {
-                    "xs": "4px",
-                    "gutter": "16px",
-                    "container-max": "1280px",
-                    "lg": "24px",
-                    "md": "16px",
-                    "sm": "8px",
-                    "base": "4px",
-                    "xl": "40px"
-            },
-            "fontFamily": {
-                    "body-sm": ["Inter"],
-                    "label-caps": ["Geist"],
-                    "headline-xl": ["Inter"],
-                    "body-md": ["Inter"],
-                    "headline-lg-mobile": ["Inter"],
-                    "data-mono": ["Geist"],
-                    "headline-lg": ["Inter"]
-            },
-            "fontSize": {
-                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
-                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
-            }
-          },
-        },
-      }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid #E2E8F0;
-        }
-        .snap-x-mandatory {
-            scroll-snap-type: x mandatory;
-        }
-        .snap-center {
-            scroll-snap-align: center;
-        }
-        ::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
-<style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      min-height: max(884px, 100dvh);
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 22px 16px;
+      background: linear-gradient(135deg, #0f766e, #164e63);
+      color: white;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 1.45rem;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      margin: 0 0 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin: 12px 0 5px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    textarea {
+      min-height: 78px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .gps-box {
+      margin-top: 10px;
+      padding: 10px;
+      background: #eef7f5;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .image-slot {
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      background: #fbfcfb;
+    }
+
+    .image-slot strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .preview {
+      display: none;
+      margin-top: 10px;
+      max-height: 180px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: var(--accent-dark);
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #1f2933;
+    }
+
+    button.secondary:hover {
+      background: #d1d5db;
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      overflow-x: auto;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+    }
+
+    .sample-list {
+      font-size: 0.92rem;
+      color: var(--muted);
+      padding-left: 18px;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .top-nav a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+
+    .model-toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .model-toggle-row input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      transform: scale(1.15);
+    }
+
+    .model-toggle-row label {
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .model-card {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid #a7d6cf;
+      border-radius: 12px;
+      background: #f0fdfa;
+    }
+
+    .model-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: var(--accent-dark);
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 14px;
+      font-size: 0.92rem;
+    }
+
+    .model-label {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .model-value {
+      font-weight: 700;
+    }
+
+    .probability-panel { margin-top:16px; padding-top:14px; border-top:1px solid #a7d6cf; }
+    .probability-panel h4 { margin:0 0 10px; color:var(--accent-dark); font-size:.95rem; }
+    .probability-row { display:grid; grid-template-columns:105px 1fr 54px; align-items:center; gap:10px; margin:7px 0; font-size:.88rem; }
+    .probability-bar { height:9px; background:#dce9e6; border-radius:999px; overflow:hidden; }
+    .probability-fill { height:100%; background:var(--accent); border-radius:999px; }
+    .np-card { margin-top:16px; padding-top:14px; border-top:2px solid #a7d6cf; }
+    .np-card h4 { margin:0 0 10px; color:var(--accent-dark); font-size:1rem; }
+    .model-dev-note {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .model-error {
+      color: var(--danger);
+    }
+
+    @media (max-width: 640px) {
+      .row, .actions {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-background text-on-surface font-body-md selection:bg-secondary-container">
+<body>
+  <header>
+    <h1>EcoExposure Capture Entry</h1>
+    <p>Internal field data-collection webapp prototype</p>
+  </header>
 
+  <main>
+    <div class="top-nav">
+      <a href="./index.html">Capture App</a>
+      <a href="./gallery.html">View My Gallery →</a>
+    </div>
 
+    <section>
+      <h2>Login</h2>
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="name@example.com" autocomplete="email" />
 
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
 
-<!-- TopAppBar -->
-<header class="bg-white/80 dark:bg-surface-container-low/80 docked full-width top-0 sticky backdrop-blur-xl border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none flex justify-between items-center px-gutter w-full z-50 h-16">
-<div class="flex items-center gap-sm">
-<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="water_drop">water_drop</span>
-<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed">ecotera asia</h1>
-</div>
-<div class="flex gap-md">
-<button class="hover:bg-surface-container-high/50 transition-colors p-2 rounded-full active:scale-95 duration-150">
-<span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
-</button>
-<div class="relative">
-<button id="accountMenuButton" type="button" onclick="toggleAccountMenu()" aria-label="Open account menu" aria-expanded="false"
-class="hover:bg-surface-container-high/50 transition-colors p-2 rounded-full active:scale-95 duration-150">
-<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
-</button>
-<div id="accountMenu" class="hidden absolute right-0 mt-2 w-56 bg-white border border-outline-variant rounded-xl shadow-xl overflow-hidden z-[100]">
-<div id="accountEmail" class="px-4 py-3 text-sm text-on-surface-variant border-b border-outline-variant">Checking account...</div>
-<a href="account.html" class="block px-4 py-3 hover:bg-surface-container-low font-semibold">My Account</a>
-<a href="my-samples.html" class="block px-4 py-3 hover:bg-surface-container-low font-semibold">My Samples</a>
-<button type="button" onclick="signOutFromHome()" class="w-full text-left px-4 py-3 hover:bg-surface-container-low font-semibold text-error">Log Out</button>
-</div>
-</div>
-</div>
-</header>
-<main class="pb-32 pt-lg">
-<!-- Hero Section -->
+      <div class="actions">
+        <button type="button" onclick="signIn()">Log In</button>
+        <button class="secondary" type="button" onclick="signUp()">Create Account</button>
+        <button class="secondary full" type="button" onclick="forgotPassword()">Forgot Password</button>
+        <button class="secondary full" type="button" onclick="signOut()">Log Out</button>
+      </div>
 
-<!-- Primary Actions -->
-<section class="px-gutter mb-xl">
-  <div class="grid grid-cols-2 gap-4 max-w-xl">
+      <div class="status" id="authStatus">Not logged in.</div>
+    </section>
 
-    <a href="new-sample.html"
-       class="bg-secondary text-white rounded-xl py-4 text-center font-bold shadow hover:opacity-90 transition">
-      ➕ New Sample
-    </a>
+    <section>
+      <h2>Sample Info</h2>
 
-    <a href="my-samples.html"
-      class="bg-white border border-outline rounded-xl py-4 text-center font-bold shadow hover:bg-gray-50 transition">
-      🖼 My Samples
-    </a>
+      <label for="collector">Collector</label>
+      <input id="collector" placeholder="Collector name" />
 
-  </div>
-</section>
+      <label for="location">Location</label>
+      <input id="location" placeholder="Site, city, or notes" />
 
-<section class="px-gutter mb-xl">
-<h2 class="font-headline-xl text-headline-xl text-primary max-w-2xl mb-sm">EcoExposure™</h2>
-<p class="font-body-md text-on-surface-variant max-w-lg">Explore Water Systems Across Asia and Around the World</p>
-</section>
-<!-- Horizontal Immersive Scroller -->
-<div class="flex overflow-x-auto snap-x-mandatory px-gutter gap-lg pb-xl">
-<!-- Singapore Tap Water -->
-<div onclick="window.location.href='capture_image_singapore.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
-<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
-<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Singapore skyline and harbor water." src="location_images/singapore_singapore_location.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-<div class="absolute bottom-0 p-lg w-full">
-<div class="flex items-center gap-sm mb-xs">
-<span class="bg-secondary-container/20 text-secondary-fixed-dim px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Coastal Harbor</span>
-</div>
-<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Singapore Tap Water</h3>
-<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Coastal urban water profile.</p>
-<a href="capture_image_singapore.html" class="bg-secondary-container text-on-secondary-container px-lg py-md rounded-full font-label-caps flex items-center gap-sm hover:brightness-110 active:scale-95 transition-all inline-flex">
-Explore Sample
-<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-<!-- Manila Tap Water -->
-<div onclick="window.location.href='capture_image_manila.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
-<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
-<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Manila municipal water system." src="location_images/manila_philippines_location.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-<div class="absolute bottom-0 p-lg w-full">
-<div class="flex items-center gap-sm mb-xs">
-<span class="bg-surface-container-highest/20 text-on-surface-variant px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Urban Municipal</span>
-</div>
-<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Manila Tap Water</h3>
-<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Municipal water profile.</p>
-<a href="capture_image_manila.html" class="bg-white/10 hover:bg-white/20 border border-white/30 text-on-primary px-lg py-md rounded-full font-label-caps flex items-center gap-sm active:scale-95 transition-all inline-flex">
-Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-<!-- Paris Tap Water -->
-<div onclick="window.location.href='capture_image_paris.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
-<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
-<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Paris tap water profile." src="location_images/paris_france_location.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-<div class="absolute bottom-0 p-lg w-full">
-<div class="flex items-center gap-sm mb-xs">
-<span class="bg-secondary-container/20 text-secondary-fixed-dim px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Hard Water</span>
-</div>
-<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Paris Tap Water</h3>
-<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Mineral-rich water profile.</p>
-<a href="capture_image_paris.html" class="bg-secondary-container text-on-secondary-container px-lg py-md rounded-full font-label-caps flex items-center gap-sm hover:brightness-110 active:scale-95 transition-all inline-flex">
-Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</a>
-</div></div>
-</div>
-<!-- San Francisco Bay -->
-<div onclick="window.location.href='capture_image_san_francisco.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
-<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
-<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="San Francisco Bay and Golden Gate Bridge." src="location_images/san_francisco_usa_location.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-<div class="absolute bottom-0 p-lg w-full">
-<div class="flex items-center gap-sm mb-xs">
-<span class="bg-surface-container-highest/20 text-on-surface-variant px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Field Sample</span>
-</div>
-<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">San Francisco Bay</h3>
-<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Coastal field sample.</p>
-<a href="capture_image_san_francisco.html" class="bg-white/10 hover:bg-white/20 border border-white/30 text-on-primary px-lg py-md rounded-full font-label-caps flex items-center gap-sm active:scale-95 transition-all inline-flex">
-Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-<!-- Ohio Freshwater Lake -->
-<div onclick="window.location.href='capture_image_ohio_lake.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
-<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
-<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Ohio freshwater lake." src="location_images/ohio-lake_usa_location.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-<div class="absolute bottom-0 p-lg w-full">
-<div class="flex items-center gap-sm mb-xs">
-<span class="bg-secondary-container/20 text-secondary-fixed-dim px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Freshwater Lake</span>
-</div>
-<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Ohio Lake</h3>
-<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Freshwater lake with dissolved organic matter (DOMs).</p>
-<a href="capture_image_ohio_lake.html" class="bg-secondary-container text-on-secondary-container px-lg py-md rounded-full font-label-caps flex items-center gap-sm hover:brightness-110 active:scale-95 transition-all inline-flex">
-Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-<!-- Filtered Water -->
-<div onclick="window.location.href='capture_image_filtered_water.html'" class="snap-center shrink-0 w-[85vw] md:w-[600px] group cursor-pointer">
-<div class="relative h-[500px] rounded-xl overflow-hidden glass-card shadow-sm transition-transform duration-500 hover:scale-[1.01]">
-<img class="absolute inset-0 w-full h-full object-cover transition-all duration-700" data-alt="Filtered water reference sample." src="location_images/filtered_water_location.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-<div class="absolute bottom-0 p-lg w-full">
-<div class="flex items-center gap-sm mb-xs">
-<span class="bg-surface-container-highest/20 text-on-surface-variant px-sm py-xs rounded-full font-label-caps text-label-caps backdrop-blur-md">Reference Sample</span>
-</div>
-<h3 class="font-headline-lg text-headline-lg text-on-primary mb-xs">Filtered Water</h3>
-<p class="text-on-primary/80 font-body-sm mb-md line-clamp-2">Reference control sample.</p>
-<a href="capture_image_filtered_water.html" class="bg-white/10 hover:bg-white/20 border border-white/30 text-on-primary px-lg py-md rounded-full font-label-caps flex items-center gap-sm active:scale-95 transition-all inline-flex">
-Explore Sample <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
+      <label for="waterType">Water Type</label>
+      <select id="waterType">
+        <option>Tap</option>
+        <option>Filtered</option>
+        <option>Bottled</option>
+        <option>River</option>
+        <option>Lake</option>
+        <option>Bay</option>
+        <option>Ocean</option>
+        <option>Brackish</option>
+        <option selected>Other</option>
+      </select>
 
-</div>
-</main>
-<!-- BottomNavBar -->
-<nav class="bg-white/95 dark:bg-surface-container-highest/95 fixed bottom-0 w-full z-50 backdrop-blur-lg border-t border-outline-variant/30 shadow-[0_-4px_16px_rgba(0,22,41,0.04)] flex justify-around items-center px-1 pb-safe-area-inset-bottom h-20">
+      <button type="button" onclick="captureGPS()">Capture GPS Location</button>
+      <div class="gps-box" id="gpsStatus">No GPS location captured yet.</div>
 
-<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-3 py-1 active:scale-90 transition-all duration-200" href="index.html">
-<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">home</span>
-<span class="font-label-caps text-label-caps">Home</span>
-</a>
+      <div class="row">
+        <div>
+          <label for="sampleID">Sample ID</label>
+          <input id="sampleID" placeholder="Example: SG_TAP_001" />
+        </div>
+        <div>
+          <label for="concentration">Concentration</label>
+          <input id="concentration" placeholder="Unknown / spike value" />
+        </div>
+      </div>
 
-<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="new-sample.html">
-<span class="material-symbols-outlined">add_circle</span>
-<span class="font-label-caps text-label-caps">New Sample</span>
-</a>
+      <label for="minutesSincePowder">Minutes since powder</label>
+      <input id="minutesSincePowder" inputmode="numeric" placeholder="30, 45, 60..." />
 
-<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="my-samples.html">
-<span class="material-symbols-outlined">photo_library</span>
-<span class="font-label-caps text-label-caps">My Samples</span>
-</a>
+      <label for="notes">Notes</label>
+      <textarea id="notes" placeholder="Sample conditions, dilution, visual observations..."></textarea>
+    </section>
 
-<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="#" onclick="event.preventDefault(); alert('Learn section coming soon!');">
-<span class="material-symbols-outlined">menu_book</span>
-<span class="font-label-caps text-label-caps">Learn</span>
-</a>
+    <section>
+      <h2>Development Model</h2>
 
-<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-90 transition-all duration-200" href="account.html">
-<span class="material-symbols-outlined">account_circle</span>
-<span class="font-label-caps text-label-caps">Account</span>
-</a>
+      <div class="model-toggle-row">
+        <input id="runModel" type="checkbox" />
+        <label for="runModel">Run EcoExposure development model after saving</label>
+      </div>
 
-</nav>
-<script>
-        // Micro-interactions for horizontal scroll
-        const scroller = document.querySelector('.overflow-x-auto');
-        let isDown = false;
-        let startX;
-        let scrollLeft;
+      <div class="status" id="modelStatus">
+        Model OFF — sample will be collected normally.
+      </div>
 
-        scroller.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.pageX - scroller.offsetLeft;
-            scrollLeft = scroller.scrollLeft;
-        });
-        scroller.addEventListener('mouseleave', () => {
-            isDown = false;
-        });
-        scroller.addEventListener('mouseup', () => {
-            isDown = false;
-        });
-        scroller.addEventListener('mousemove', (e) => {
-            if(!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - scroller.offsetLeft;
-            const walk = (x - startX) * 2;
-            scroller.scrollLeft = scrollLeft - walk;
-        });
-    </script>
+      <div class="model-card" id="modelResult">
+        <h3>EcoExposure Development Prediction</h3>
 
-<script>
-  function closeWelcomePopup() {
-    document.getElementById("welcomePopup").style.display = "none";
-  }
-</script>
+        <div class="model-grid">
+          <div class="model-label">Water model</div>
+          <div class="model-value" id="predictionModel">—</div>
 
+          <div class="model-label">Predicted MP class</div>
+          <div class="model-value" id="predictionMP">—</div>
 
-<script>
-  const SUPABASE_URL = "https://hakezadejldlvfkaaxbs.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_objAYX-6RRXLwOWra1a66g_dDthWovO";
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+          <div class="model-label">EcoExposure band</div>
+          <div class="model-value" id="predictionBand">—</div>
 
-  function toggleAccountMenu() {
-    const menu = document.getElementById("accountMenu");
-    const button = document.getElementById("accountMenuButton");
-    const willOpen = menu.classList.contains("hidden");
-    menu.classList.toggle("hidden");
-    button.setAttribute("aria-expanded", String(willOpen));
-  }
+          <div class="model-label">Confidence</div>
+          <div class="model-value" id="predictionConfidence">—</div>
+        </div>
 
-  document.addEventListener("click", (event) => {
-    const menu = document.getElementById("accountMenu");
-    const button = document.getElementById("accountMenuButton");
-    if (!menu || !button) return;
-    if (!menu.contains(event.target) && !button.contains(event.target)) {
-      menu.classList.add("hidden");
-      button.setAttribute("aria-expanded", "false");
-    }
-  });
+        <div class="probability-panel" id="mpProbabilityPanel" style="display:none;">
+          <h4>MP Class Probabilities</h4>
+          <div id="mpProbabilityRows"></div>
+        </div>
 
-  async function initializeHomeAccount() {
-    const emailBox = document.getElementById("accountEmail");
-    const { data, error } = await supabaseClient.auth.getUser();
+        <div class="np-card" id="npResult" style="display:none;">
+          <h4>Nanoplastic Development Prediction</h4>
+          <div class="model-grid">
+            <div class="model-label">Predicted NP class</div>
+            <div class="model-value" id="predictionNP">—</div>
+            <div class="model-label">NP confidence</div>
+            <div class="model-value" id="predictionNPConfidence">—</div>
+          </div>
+          <div class="probability-panel" id="npProbabilityPanel">
+            <h4>NP Class Probabilities</h4>
+            <div id="npProbabilityRows"></div>
+          </div>
+        </div>
 
-    if (error || !data.user) {
-      emailBox.textContent = "Not logged in";
-      return;
+        <div class="model-dev-note">
+          Internal development output only. MP and NP models use the same saved Top View image and frozen ROI60 preprocessing.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Images</h2>
+
+      <div class="image-slot">
+        <strong>Top View</strong>
+        <input id="topImage" type="file" accept="image/*" onchange="previewImage('topImage','topPreview')" />
+        <img id="topPreview" class="preview" alt="Top view preview" />
+      </div>
+
+      <div class="image-slot">
+        <strong>Side View</strong>
+        <input id="sideImage" type="file" accept="image/*" onchange="previewImage('sideImage','sidePreview')" />
+        <img id="sidePreview" class="preview" alt="Side view preview" />
+      </div>
+
+      <div class="image-slot">
+        <strong>Close-Up</strong>
+        <input id="closeUpImage" type="file" accept="image/*" onchange="previewImage('closeUpImage','closeUpPreview')" />
+        <img id="closeUpPreview" class="preview" alt="Close-up preview" />
+      </div>
+
+      <div class="image-slot">
+        <strong>Other</strong>
+        <input id="otherImage" type="file" accept="image/*" onchange="previewImage('otherImage','otherPreview')" />
+        <img id="otherPreview" class="preview" alt="Other preview" />
+      </div>
+    </section>
+
+    <section>
+      <h2>Actions</h2>
+
+      <div class="actions">
+        <button class="full" type="button" onclick="saveEntry()">Save Entry</button>
+        <button class="secondary" type="button" onclick="previewCSV()">Preview Full CSV Log</button>
+        <button class="secondary" type="button" onclick="downloadCSV()">Download Full CSV Log</button>
+        <button class="secondary full" type="button" onclick="clearDraft()">Clear Current Draft</button>
+      </div>
+
+      <div class="status" id="saveStatus">No entries saved yet.</div>
+    </section>
+
+    <section>
+      <h2>Saved Samples</h2>
+      <ol class="sample-list" id="sampleList"></ol>
+    </section>
+
+    <section>
+      <h2>CSV Preview</h2>
+      <pre id="csvPreview">No CSV generated yet.</pre>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://qvmgrchkmmezpwhlfxjv.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_3M-2qrVCnjO9XfjsBCUf6g_l1wSuwVu";
+    const STORAGE_BUCKET = "ecoexposure_images";
+    const TABLE_NAME = "samples"; // Change to "samples" if that is what you named your table.
+
+    // Development inference endpoint.
+    // Leave blank until your Python inference service is deployed.
+    // Example later: "https://your-inference-service.example.com/predict"
+    const MODEL_API_URL =   "https://ecoexposure-webapp-inference-v1.onrender.com/predict";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const entries = [];
+    let latitude = "";
+    let longitude = "";
+    let currentUser = null;
+
+    const imageSlots = {
+      topImage: "top",
+      sideImage: "side",
+      closeUpImage: "closeup",
+      otherImage: "other"
+    };
+
+    async function checkAuth() {
+      const { data } = await supabaseClient.auth.getUser();
+      currentUser = data.user || null;
+      document.getElementById("authStatus").textContent = currentUser
+        ? `Logged in as ${currentUser.email}`
+        : "Not logged in.";
     }
 
-    emailBox.textContent = data.user.email;
+async function signUp() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+  if (error) {
+    document.getElementById("authStatus").textContent = `Sign-up error: ${error.message}`;
+    showToast("❌ " + error.message);
+    return;
   }
 
-  async function signOutFromHome() {
-    const { error } = await supabaseClient.auth.signOut();
+  document.getElementById("authStatus").textContent =
+    "Account created. Check email if confirmation is required, then log in.";
 
-    if (error) {
-      alert("Logout failed: " + error.message);
-      return;
+  showToast("✅ Account created! Please check your email to confirm your account. Then return here and log in.");
+
+
+  await checkAuth();
+}
+    
+
+    async function signIn() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      document.getElementById("authStatus").textContent = error
+        ? `Login error: ${error.message}`
+        : `Logged in as ${data.user.email}`;
+      await checkAuth();
     }
 
-    window.location.replace("login.html");
-  }
 
-  initializeHomeAccount();
-</script>
+    async function forgotPassword() {
+      const email = document.getElementById("email").value.trim();
+      const status = document.getElementById("authStatus");
 
+      if (!email) {
+        status.textContent = "Enter your email address first, then tap Forgot Password.";
+        return;
+      }
+
+      status.textContent = "Sending password reset email...";
+
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: "https://melinda-ecoteraasia.github.io/ecoexposure-webapp_v1/reset-password.html"
+      });
+
+      if (error) {
+        status.textContent = "Password reset failed: " + error.message;
+        return;
+      }
+
+      status.textContent = "Password reset email sent. Check your inbox/spam folder.";
+    }
+
+    async function signOut() {
+      await supabaseClient.auth.signOut();
+      currentUser = null;
+      document.getElementById("authStatus").textContent = "Logged out.";
+    }
+
+    function sanitizeForFilename(input) {
+      return String(input || "")
+        .trim()
+        .replace(/\s+/g, "")
+        .replace(/[\\/:,]/g, "-")
+        .replace(/[^a-zA-Z0-9._-]/g, "");
+    }
+
+    function todayFolderName() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    }
+
+    function timestampString() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+    }
+
+    function captureGPS() {
+      const box = document.getElementById("gpsStatus");
+      if (!navigator.geolocation) {
+        box.textContent = "GPS not supported in this browser.";
+        return;
+      }
+      box.textContent = "Requesting GPS location...";
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          latitude = position.coords.latitude;
+          longitude = position.coords.longitude;
+          box.textContent = `Latitude: ${latitude} | Longitude: ${longitude}`;
+        },
+        error => { box.textContent = `GPS error: ${error.message}`; },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    function previewImage(inputID, previewID) {
+      const input = document.getElementById(inputID);
+      const preview = document.getElementById(previewID);
+      if (!input.files || !input.files[0]) {
+        preview.style.display = "none";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    function filenameFor(slot, file) {
+      if (!file) return "";
+      const collector = sanitizeForFilename(document.getElementById("collector").value || "UnknownCollector");
+      const waterType = sanitizeForFilename(document.getElementById("waterType").value || "Other");
+      const sampleID = sanitizeForFilename(document.getElementById("sampleID").value);
+      const concentration = sanitizeForFilename(document.getElementById("concentration").value);
+      const minutes = sanitizeForFilename(document.getElementById("minutesSincePowder").value);
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      return `EcoExposure_${slot}_${collector}_${waterType}_${sampleID}_${concentration}_${minutes}min_${timestampString()}.${ext}`;
+    }
+
+    async function uploadOneImage(inputID, slot) {
+      const input = document.getElementById(inputID);
+      const file = input.files && input.files[0] ? input.files[0] : null;
+      if (!file) return "";
+
+      const folder = todayFolderName();
+      const userFolder = currentUser ? currentUser.id : "anonymous";
+      const filename = filenameFor(slot, file);
+      const path = `${userFolder}/${folder}/${filename}`;
+
+      const { error } = await supabaseClient.storage
+        .from(STORAGE_BUCKET)
+        .upload(path, file, { cacheControl: "3600", upsert: false });
+
+      if (error) throw new Error(`${slot} upload failed: ${error.message}`);
+      return path;
+    }
+
+
+    function getModelForWaterType(waterType) {
+      const type = String(waterType || "").trim().toLowerCase();
+
+      if (["ocean", "brackish", "bay"].includes(type)) {
+        return "salt_mp_v1";
+      }
+
+      if (["tap", "filtered", "bottled"].includes(type)) {
+        return "filtered_mp_dev_v1";
+      }
+
+      return null;
+    }
+
+    function resetModelResult() {
+      document.getElementById("modelResult").style.display = "none";
+      document.getElementById("predictionModel").textContent = "—";
+      document.getElementById("predictionMP").textContent = "—";
+      document.getElementById("predictionBand").textContent = "—";
+      document.getElementById("predictionConfidence").textContent = "—";
+      document.getElementById("mpProbabilityPanel").style.display = "none";
+      document.getElementById("mpProbabilityRows").innerHTML = "";
+      document.getElementById("npResult").style.display = "none";
+      document.getElementById("npProbabilityRows").innerHTML = "";
+      document.getElementById("predictionNP").textContent = "—";
+      document.getElementById("predictionNPConfidence").textContent = "—";
+    }
+
+    function renderProbabilityRows(containerID, probabilities, displayLabels = null) {
+      const container = document.getElementById(containerID);
+      container.innerHTML = "";
+      if (!probabilities || typeof probabilities !== "object") return false;
+
+      let entries = Object.entries(probabilities);
+      const numeric = entries.every(([k]) => Number.isFinite(Number(k)));
+      if (numeric) entries.sort((a,b) => Number(a[0]) - Number(b[0]));
+
+      entries.forEach(([label, probability]) => {
+        const p = Number(probability);
+        if (!Number.isFinite(p)) return;
+        const pct = Math.max(0, Math.min(100, p * 100));
+        const shownLabel = displayLabels?.[label] || (numeric ? `${label} MP/L` : label);
+
+        const row = document.createElement("div");
+        row.className = "probability-row";
+        row.innerHTML =
+          `<div>${shownLabel}</div>` +
+          `<div class="probability-bar"><div class="probability-fill" style="width:${pct}%"></div></div>` +
+          `<div style="text-align:right;font-weight:700">${pct.toFixed(1)}%</div>`;
+        container.appendChild(row);
+      });
+      return container.children.length > 0;
+    }
+
+    async function runDevelopmentModel({ sampleID, waterType, topPhotoPath }) {
+      const modelStatus = document.getElementById("modelStatus");
+      const modelResult = document.getElementById("modelResult");
+      const predictionModel = document.getElementById("predictionModel");
+      const predictionMP = document.getElementById("predictionMP");
+      const predictionBand = document.getElementById("predictionBand");
+      const predictionConfidence = document.getElementById("predictionConfidence");
+      const predictionNP = document.getElementById("predictionNP");
+      const predictionNPConfidence = document.getElementById("predictionNPConfidence");
+
+      const modelName = getModelForWaterType(waterType);
+
+      if (!modelName) {
+        resetModelResult();
+        modelStatus.textContent =
+          `Sample saved. No development model is assigned to water type: ${waterType}.`;
+        return;
+      }
+
+      if (!topPhotoPath) {
+        resetModelResult();
+        modelStatus.textContent =
+          "Sample saved. Model was not run because no Top View photo was provided.";
+        return;
+      }
+
+      if (!MODEL_API_URL) {
+        resetModelResult();
+        modelStatus.textContent =
+          `Sample saved. ${modelName} selected, but MODEL_API_URL is not configured yet.`;
+        return;
+      }
+
+      modelStatus.textContent = `Running ${modelName}...`;
+
+      const { data: sessionData } = await supabaseClient.auth.getSession();
+      const accessToken = sessionData?.session?.access_token || "";
+
+      const response = await fetch(MODEL_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {})
+        },
+        body: JSON.stringify({
+          sample_id: sampleID,
+          water_type: waterType,
+          model_name: modelName,
+          top_photo_path: topPhotoPath,
+          storage_bucket: STORAGE_BUCKET
+        })
+      });
+
+      if (!response.ok) {
+        const detail = await response.text();
+        throw new Error(
+          `Inference failed (${response.status})${detail ? ": " + detail : ""}`
+        );
+      }
+
+      const result = await response.json();
+
+      const predictedMP =
+        result.predicted_mp ??
+        result.prediction ??
+        result.predicted_class ??
+        "—";
+
+      const band =
+        result.band ??
+        result.ecoexposure_band ??
+        result.ecoexposure_index ??
+        "—";
+
+      const confidence = Number(result.confidence);
+
+      predictionModel.textContent =
+        result.model_version || result.model_name || modelName;
+
+      predictionMP.textContent =
+        predictedMP === "—" ? "—" : `${predictedMP} MP/L`;
+
+      predictionBand.textContent = String(band);
+
+      predictionConfidence.textContent =
+        Number.isFinite(confidence)
+          ? `${Math.round(confidence * 100)}%`
+          : "—";
+
+      const mpProbabilities =
+        result.mp?.class_probabilities || result.class_probabilities;
+
+      if (renderProbabilityRows("mpProbabilityRows", mpProbabilities)) {
+        document.getElementById("mpProbabilityPanel").style.display = "block";
+      }
+
+      if (result.np) {
+        const npPrediction = result.np.prediction ?? "—";
+        const npConfidence = Number(result.np.confidence);
+
+        const defaultNPLabels = {
+          "LE1M": "≤1M NP/L",
+          "10M": "10M NP/L",
+          "100M": "100M NP/L",
+          "1B": "1B NP/L"
+        };
+
+        predictionNP.textContent =
+          result.np.display_labels?.[npPrediction] ||
+          defaultNPLabels[npPrediction] ||
+          npPrediction;
+
+        predictionNPConfidence.textContent =
+          Number.isFinite(npConfidence)
+            ? `${Math.round(npConfidence * 100)}%`
+            : "—";
+
+        renderProbabilityRows(
+          "npProbabilityRows",
+          result.np.class_probabilities,
+          result.np.display_labels || defaultNPLabels
+        );
+
+        document.getElementById("npResult").style.display = "block";
+      }
+
+      modelResult.style.display = "block";
+      modelStatus.textContent = "Development prediction complete.";
+    }
+
+    async function saveEntry() {
+      const status = document.getElementById("saveStatus");
+      await checkAuth();
+
+      if (!currentUser) {
+        status.textContent = "Please log in before saving.";
+        return;
+      }
+
+      const sampleID = document.getElementById("sampleID").value.trim();
+      const concentration = document.getElementById("concentration").value.trim();
+      const hasImage = Object.keys(imageSlots).some(inputID => {
+        const input = document.getElementById(inputID);
+        return input.files && input.files.length > 0;
+      });
+
+      if (!sampleID || !concentration || !hasImage) {
+        status.textContent = "Required: Sample ID, Concentration, and at least one image.";
+        return;
+      }
+
+      try {
+        status.textContent = "Uploading photos...";
+
+        const top_photo = await uploadOneImage("topImage", "top");
+        const side_photo = await uploadOneImage("sideImage", "side");
+        const closeup_photo = await uploadOneImage("closeUpImage", "closeUp");
+        const other_photo = await uploadOneImage("otherImage", "other");
+
+        status.textContent = "Saving database record...";
+
+        const entry = {
+          user_id: currentUser.id,
+          collector: document.getElementById("collector").value,
+          location: document.getElementById("location").value,
+          water_type: document.getElementById("waterType").value,
+          latitude: latitude === "" ? null : Number(latitude),
+          longitude: longitude === "" ? null : Number(longitude),
+          sample_id: sampleID,
+          concentration: concentration,
+          minutes_since_powder: document.getElementById("minutesSincePowder").value,
+          top_photo,
+          side_photo,
+          closeup_photo,
+          other_photo,
+          notes: document.getElementById("notes").value
+        };
+
+        const { error } = await supabaseClient
+          .from(TABLE_NAME)
+          .insert(entry);
+
+        if (error) throw new Error(`Database save failed: ${error.message}`);
+
+        entries.push({
+          ...entry,
+          timestamp: new Date().toISOString(),
+          top: top_photo,
+          side: side_photo,
+          closeUp: closeup_photo,
+          other: other_photo,
+          note: entry.notes,
+          waterType: entry.water_type,
+          minutesSincePowder: entry.minutes_since_powder,
+          sampleID: entry.sample_id
+        });
+
+        updateSampleList();
+        previewCSV();
+        status.textContent = `✅ Saved to Supabase: ${sampleID}. Photos uploaded and database row inserted.`;
+
+        // Model inference is OPTIONAL and always runs AFTER the sample is safely saved.
+        const runModel = document.getElementById("runModel").checked;
+
+        if (runModel) {
+          try {
+            await runDevelopmentModel({
+              sampleID,
+              waterType: entry.water_type,
+              topPhotoPath: top_photo
+            });
+          } catch (modelError) {
+            console.error("Development model error:", modelError);
+            resetModelResult();
+            const modelStatus = document.getElementById("modelStatus");
+            modelStatus.textContent =
+              `Sample saved successfully. Model inference failed: ${modelError.message}`;
+            modelStatus.classList.add("model-error");
+          }
+        }
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? "");
+      if (text.includes(",") || text.includes('"') || text.includes("\n")) {
+        return `"${text.replace(/"/g, '""')}"`;
+      }
+      return text;
+    }
+
+    function makeCSV(rowsSource = entries) {
+      const header = [
+        "id", "created_at", "user_id", "collector", "location", "water_type",
+        "latitude", "longitude", "sample_id", "concentration", "minutes_since_powder",
+        "top_photo", "side_photo", "closeup_photo", "other_photo", "notes"
+      ];
+      const rows = rowsSource.map(e => header.map(key => csvEscape(e[key])).join(","));
+      return [header.join(","), ...rows].join("\n");
+    }
+
+    async function fetchFullLog() {
+      await checkAuth();
+
+      if (!currentUser) {
+        throw new Error("Log in before previewing or downloading the full CSV log.");
+      }
+
+      const { data, error } = await supabaseClient
+        .from(TABLE_NAME)
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        throw new Error("Could not load full CSV log: " + error.message);
+      }
+
+      return data || [];
+    }
+
+    async function previewCSV() {
+      const preview = document.getElementById("csvPreview");
+      const status = document.getElementById("saveStatus");
+
+      try {
+        preview.textContent = "Loading full CSV log from Supabase...";
+        const rows = await fetchFullLog();
+        preview.textContent = rows.length ? makeCSV(rows) : "No saved entries found in Supabase yet.";
+        status.textContent = `Preview loaded ${rows.length} saved sample(s) from Supabase.`;
+      } catch (err) {
+        preview.textContent = err.message;
+        status.textContent = err.message;
+      }
+    }
+
+    async function downloadCSV() {
+      const status = document.getElementById("saveStatus");
+
+      try {
+        status.textContent = "Loading full CSV log from Supabase...";
+        const rows = await fetchFullLog();
+
+        if (!rows.length) {
+          status.textContent = "No saved entries found in Supabase yet.";
+          return;
+        }
+
+        const blob = new Blob([makeCSV(rows)], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `eco_exposure_full_log_${timestampString()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        status.textContent = `Downloaded ${rows.length} saved sample(s) from Supabase.`;
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    }
+
+    function updateSampleList() {
+      const list = document.getElementById("sampleList");
+      list.innerHTML = "";
+      entries.forEach(e => {
+        const li = document.createElement("li");
+        li.textContent = `${e.sample_id} — ${e.water_type} — ${e.location || "No location"}`;
+        list.appendChild(li);
+      });
+    }
+
+    function clearDraft() {
+      ["collector", "location", "sampleID", "concentration", "minutesSincePowder", "notes"]
+        .forEach(id => document.getElementById(id).value = "");
+      document.getElementById("waterType").value = "Other";
+      Object.entries({
+        topImage: "topPreview",
+        sideImage: "sidePreview",
+        closeUpImage: "closeUpPreview",
+        otherImage: "otherPreview"
+      }).forEach(([inputID, previewID]) => {
+        document.getElementById(inputID).value = "";
+        const preview = document.getElementById(previewID);
+        preview.src = "";
+        preview.style.display = "none";
+      });
+      latitude = "";
+      longitude = "";
+      document.getElementById("gpsStatus").textContent = "No GPS location captured yet.";
+      document.getElementById("saveStatus").textContent = "Draft cleared.";
+      document.getElementById("runModel").checked = false;
+      document.getElementById("modelStatus").classList.remove("model-error");
+      document.getElementById("modelStatus").textContent =
+        "Model OFF — sample will be collected normally.";
+      resetModelResult();
+    }
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.innerHTML = message;
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 6000);
+}
+    document.getElementById("runModel").addEventListener("change", function () {
+      const modelStatus = document.getElementById("modelStatus");
+      modelStatus.classList.remove("model-error");
+      resetModelResult();
+
+      if (this.checked) {
+        const waterType = document.getElementById("waterType").value;
+        const modelName = getModelForWaterType(waterType);
+
+        modelStatus.textContent = modelName
+          ? `Model ON — ${modelName} will run after the sample is saved.`
+          : `Model ON — no development model is assigned to ${waterType} yet.`;
+      } else {
+        modelStatus.textContent =
+          "Model OFF — sample will be collected normally.";
+      }
+    });
+
+    document.getElementById("waterType").addEventListener("change", function () {
+      if (!document.getElementById("runModel").checked) return;
+
+      const modelName = getModelForWaterType(this.value);
+      document.getElementById("modelStatus").textContent = modelName
+        ? `Model ON — ${modelName} will run after the sample is saved.`
+        : `Model ON — no development model is assigned to ${this.value} yet.`;
+    });
+
+    checkAuth();
+
+
+  </script>
+
+<!-- Toast Notification -->
+<div id="toast" style="
+    display:none;
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#0f766e;
+    color:white;
+    padding:16px 22px;
+    border-radius:12px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.25);
+    font-size:15px;
+    font-weight:600;
+    max-width:90%;
+    z-index:9999;
+    text-align:center;
+">
+</div>
 </body>
 </html>
