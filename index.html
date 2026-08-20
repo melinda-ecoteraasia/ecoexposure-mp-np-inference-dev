@@ -611,36 +611,57 @@ async function signUp() {
 
     async function compressImage(file) {
       const bitmap = await createImageBitmap(file);
-      const maxDimension = 1400;
+      const targetBytes = 300 * 1024;
+      const initialMaxDimension = 1400;
       const scale = Math.min(
         1,
-        maxDimension / Math.max(bitmap.width, bitmap.height)
+        initialMaxDimension / Math.max(bitmap.width, bitmap.height)
       );
 
-      const width = Math.round(bitmap.width * scale);
-      const height = Math.round(bitmap.height * scale);
+      let width = Math.round(bitmap.width * scale);
+      let height = Math.round(bitmap.height * scale);
+      let quality = 0.72;
+      let blob = null;
       const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
 
-      const context = canvas.getContext("2d");
-      if (!context) {
-        bitmap.close();
-        throw new Error("Image conversion is not supported by this browser.");
+      for (let attempt = 0; attempt < 18; attempt += 1) {
+        canvas.width = width;
+        canvas.height = height;
+
+        const context = canvas.getContext("2d");
+        if (!context) {
+          bitmap.close();
+          throw new Error("Image conversion is not supported by this browser.");
+        }
+
+        context.drawImage(bitmap, 0, 0, width, height);
+
+        blob = await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            result => result
+              ? resolve(result)
+              : reject(new Error("WebP conversion failed.")),
+            "image/webp",
+            quality
+          );
+        });
+
+        if (blob.size <= targetBytes) break;
+
+        if (quality > 0.46) {
+          quality = Math.max(0.46, quality - 0.08);
+        } else {
+          width = Math.round(width * 0.85);
+          height = Math.round(height * 0.85);
+          quality = 0.62;
+        }
       }
 
-      context.drawImage(bitmap, 0, 0, width, height);
       bitmap.close();
 
-      const blob = await new Promise((resolve, reject) => {
-        canvas.toBlob(
-          result => result
-            ? resolve(result)
-            : reject(new Error("WebP conversion failed.")),
-          "image/webp",
-          0.72
-        );
-      });
+      if (!blob) {
+        throw new Error("WebP conversion failed.");
+      }
 
       const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
       return new File([blob], `${baseName}.webp`, {
